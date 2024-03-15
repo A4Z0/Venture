@@ -3,9 +3,15 @@ package org.a4z0.venture.chunk;
 import org.a4z0.venture.block.Block;
 import org.a4z0.venture.block.CraftMagicBlocks;
 import org.a4z0.venture.block.Face;
+import org.a4z0.venture.block.blocks.Glowstone;
+import org.a4z0.venture.light.Light;
 import org.a4z0.venture.position.Position;
 import org.a4z0.venture.texture.Textures;
 import org.a4z0.venture.vertex.Vertex;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
 * ...
@@ -85,6 +91,15 @@ public class Mesh {
         0f, 0f, 0f
     };
 
+    public static float[] AO = {
+        0f, 0f, 0f, 0f,
+        0f, 0f, 0f, 0f,
+        0f, 0f, 0f, 0f,
+        0f, 0f, 0f, 0f,
+        0f, 0f, 0f, 0f,
+        0f, 0f, 0f, 0f,
+    };
+
     /**
     * @param chunk ...
     *
@@ -112,11 +127,18 @@ public class Mesh {
     public static Vertex transform(Block[] Blocks) {
         Vertex Stream = new Vertex();
 
+        List<Light> Lights = new ArrayList<>();
+
+        for(Block BLOCK : Blocks) {
+            if(BLOCK instanceof Glowstone)
+                Lights.add(((Glowstone) BLOCK).getLight());
+        }
+
         for(Block BLOCK : Blocks)
             if(BLOCK != null)
                 for(Face BLOCK_FACE : Face.values())
                     if(CraftMagicBlocks.getBlockAt(BLOCK.getPosition(), BLOCK_FACE) == null)
-                       generate(Stream, BLOCK, BLOCK_FACE);
+                       generate(Stream, BLOCK, BLOCK_FACE, Lights.toArray(Lights.toArray(new Light[0])));
 
         return Stream;
     }
@@ -128,8 +150,8 @@ public class Mesh {
     * @param Face ...
     */
 
-    public static void generate(Vertex Vertex, Block Block, Face Face) {
-        generate(Vertex, Block.getPosition(), Block.getMaterial().getID(Face), Face);
+    public static void generate(Vertex Vertex, Block Block, Face Face, Light[] Lights) {
+        generate(Vertex, Block.getPosition(), Block.getMaterial().getID(Face), Face, Lights);
     }
 
     /**
@@ -139,8 +161,8 @@ public class Mesh {
     * @param Face ...
     */
 
-    public static void generate(Vertex Vertex, Position Position, int ID, Face Face) {
-        generate(Vertex, Position.getX(), Position.getY(), Position.getZ(), ID, Face);
+    public static void generate(Vertex Vertex, Position Position, int ID, Face Face, Light[] Lights) {
+        generate(Vertex, Position.getX(), Position.getY(), Position.getZ(), ID, Face, Lights);
     }
 
     /**
@@ -152,35 +174,35 @@ public class Mesh {
     * @param Face ...
     */
 
-    public static void generate(Vertex Vertex, int X, int Y, int Z, int ID, Face Face) {
+    public static void generate(Vertex Vertex, int X, int Y, int Z, int ID, Face Face, Light[] Lights) {
         switch (Face) {
             case NORTH: {
-                Vertex.vertex(adjustPosition(NORTH, X, Y, Z), adjustUV(UV, ID), NORMAL);
+                Vertex.vertex(adjustPosition(NORTH, X, Y, Z), adjustUV(UV, ID), NORMAL, adjustAO(X, Y, Z, Lights, AO));
 
                 break;
             }
             case SOUTH: {
-                Vertex.vertex(adjustPosition(SOUTH, X, Y, Z), adjustUV(UV, ID), NORMAL);
+                Vertex.vertex(adjustPosition(SOUTH, X, Y, Z), adjustUV(UV, ID), NORMAL, adjustAO(X, Y, Z, Lights, AO));
 
                 break;
             }
             case EAST: {
-                Vertex.vertex(adjustPosition(EAST, X, Y, Z), adjustUV(UV, ID), NORMAL);
+                Vertex.vertex(adjustPosition(EAST, X, Y, Z), adjustUV(UV, ID), NORMAL, adjustAO(X, Y, Z, Lights, AO));
 
                 break;
             }
             case WEST: {
-                Vertex.vertex(adjustPosition(WEST, X, Y, Z), adjustUV(UV, ID), NORMAL);
+                Vertex.vertex(adjustPosition(WEST, X, Y, Z), adjustUV(UV, ID), NORMAL, adjustAO(X, Y, Z, Lights, AO));
 
                 break;
             }
             case TOP: {
-                Vertex.vertex(adjustPosition(TOP, X, Y, Z), adjustUV(UV, ID), NORMAL);
+                Vertex.vertex(adjustPosition(TOP, X, Y, Z), adjustUV(UV, ID), NORMAL, adjustAO(X, Y, Z, Lights, AO));
 
                 break;
             }
             case BOTTOM: {
-                Vertex.vertex(adjustPosition(BOTTOM, X, Y, Z), adjustUV(UV, ID), NORMAL);
+                Vertex.vertex(adjustPosition(BOTTOM, X, Y, Z), adjustUV(UV, ID), NORMAL, adjustAO(X, Y, Z, Lights, AO));
 
                 break;
             }
@@ -247,5 +269,51 @@ public class Mesh {
         }
 
         return ADJUSTED_UV;
+    }
+
+    /**
+    * ...
+    *
+    * @param X ...
+    * @param Y ...
+    * @param Z ...
+    * @param Lights ...
+    * @param AO ...
+    *
+    * @return ...
+    */
+
+    public static float[] adjustAO(int X, int Y, int Z, Light[] Lights, float[] AO) {
+        float[] ADJUSTED_AO = AO.clone();
+
+        for (Light light : Lights) {
+            float Distance = light.getPosition().distance(X, Y, Z);
+
+            if (Distance > light.getIntensity())
+                continue;
+
+            // Calculando a atenuação da luz com base na distância
+            float attenuation = (light.getIntensity() - Distance) / light.getIntensity();
+            float intensityAttenuation = attenuation * attenuation; // Atenuação da intensidade
+            float colorAttenuation = attenuation * attenuation; // Atenuação da cor
+
+            for(int i = 0; i < AO.length; i += 4) {
+                ADJUSTED_AO[i] += (light.getColor().x * colorAttenuation);
+                ADJUSTED_AO[i + 1] += (light.getColor().y * colorAttenuation);
+                ADJUSTED_AO[i + 2] += (light.getColor().z * colorAttenuation);
+
+                ADJUSTED_AO[i] = Math.min(ADJUSTED_AO[i], 1.0f);
+                ADJUSTED_AO[i + 1] = Math.min(ADJUSTED_AO[i + 1], 1.0f);
+                ADJUSTED_AO[i + 2] = Math.min(ADJUSTED_AO[i + 2], 1.0f);
+
+                // Adicionar a intensidade da luz ao valor de oclusão ambiental
+                ADJUSTED_AO[i + 3] += intensityAttenuation;
+
+                // Garantir que o valor de oclusão ambiental não ultrapasse 1.0f
+                ADJUSTED_AO[i + 3] = Math.min(ADJUSTED_AO[i + 3], 1.0f);
+            }
+        }
+
+        return ADJUSTED_AO;
     }
 }

@@ -1,6 +1,7 @@
 package org.a4z0.venture;
 
 import org.a4z0.venture.block.blocks.Dirt;
+import org.a4z0.venture.block.blocks.Glowstone;
 import org.a4z0.venture.camera.FirstPersonCamera;
 import org.a4z0.venture.input.Input;
 import org.a4z0.venture.shader.Shader;
@@ -50,38 +51,35 @@ public final class Venture {
             FIRST_PERSON_CAMERA.handleMouse(x, y);
         });
 
+        FIRST_PERSON_CAMERA = new FirstPersonCamera();
+        FIRST_PERSON_CAMERA.setPosition(0, 0, 0);
+        FIRST_PERSON_CAMERA.setRotation(0, 0);
+
         Shaders.init();
         Textures.init();
 
         WORLD = new Overworld();
 
-        for(int x = -4; x <= 4; x++) {
-            for(int y = -4; y <= 4; y++) {
-                for (int z = -4; z <= 4; z++) {
-                    WORLD.setBlock(new Dirt(x, y, z));
-                }
+        for(int x = -16; x <= 16; x++) {
+            for (int z = -16; z <= 16; z++) {
+                WORLD.setBlock(new Dirt(x, 0, z));
             }
         }
 
-        FIRST_PERSON_CAMERA = new FirstPersonCamera();
-        FIRST_PERSON_CAMERA.setPosition(-16, 120, -16);
-        FIRST_PERSON_CAMERA.setRotation(0, 0);
+        WORLD.setBlock(new Glowstone(0, 0, 0));
 
         SHADER_PROGRAM = new ShaderProgram();
         SHADER_PROGRAM.bind(0, "vertex_position");
         SHADER_PROGRAM.bind(1, "vertex_texture_coordinates");
         SHADER_PROGRAM.bind(2, "vertex_normal");
-
-        /*SHADER_PROGRAM.setUniform("directional_diffuse_color", WORLD.getSky().getDirectionalDiffuseColor());
-        SHADER_PROGRAM.setUniform("directional_ambient_color", WORLD.getSky().getDirectionalAmbientColor());
-        SHADER_PROGRAM.setUniform("directional_direction", WORLD.getSky().getDirectionalDirection());*/
+        SHADER_PROGRAM.bind(3, "vertex_ao");
 
         VERTEX_SHADER = new Shader(GL_VERTEX_SHADER);
-        VERTEX_SHADER.source(Shaders.VERTEX_SHADER_V2_0);
+        VERTEX_SHADER.source(Shaders.VERTEX_SHADER_V0_2);
         VERTEX_SHADER.compile();
 
         FRAGMENT_SHADER = new Shader(GL_FRAGMENT_SHADER);
-        FRAGMENT_SHADER.source(Shaders.FRAGMENT_SHADER_V2_0);
+        FRAGMENT_SHADER.source(Shaders.FRAGMENT_SHADER_V0_2);
         FRAGMENT_SHADER.compile();
 
         SHADER_PROGRAM.add(VERTEX_SHADER);
@@ -120,8 +118,9 @@ public final class Venture {
             SHADER_PROGRAM.setUniform("camera_projection", projection);
             SHADER_PROGRAM.setUniform("camera_view", view);
 
-            for(Chunk CHUNK : WORLD.getChunks())
+            for(Chunk CHUNK : WORLD.getChunks()) {
                 CHUNK.render(VERTEX_RENDERER);
+            }
 
             WINDOW.update();
         }

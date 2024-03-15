@@ -53,4 +53,17 @@ public class Position {
     public int getZ() {
         return this.i.z;
     }
+
+
+
+    public float distance(Position other) {
+        return this.distance(other.getX(), other.getY(), other.getZ());
+    }
+
+    public float distance(int X, int Y, int Z) {
+        int dx = this.getX() - X;
+        int dy = this.getY() - Y;
+        int dz = this.getZ() - Z;
+        return (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
 }

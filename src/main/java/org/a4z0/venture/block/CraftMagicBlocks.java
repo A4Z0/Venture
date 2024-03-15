@@ -1,7 +1,5 @@
 package org.a4z0.venture.block;
 
-import org.a4z0.venture.camera.FirstPersonCamera;
-import org.a4z0.venture.Frustum;
 import org.a4z0.venture.chunk.BlockRegister;
 import org.a4z0.venture.position.Position;
 
@@ -48,10 +46,5 @@ public class CraftMagicBlocks {
             case BOTTOM ->
                 BlockRegister.getBlock(X, Y - 1, Z);
         };
-    }
-
-    @Deprecated
-    public static boolean frustum(FirstPersonCamera camera, float[] positions) {
-        return Frustum.isObjectInFrustum(positions, camera.getProjection(), camera.getView());
     }
 }

@@ -76,6 +76,10 @@ public class ShaderProgram {
         glUniform3f(this.getUniformLocation(name), x, y, z);
     }
 
+    public void setUniform(String name, float f) {
+        glUniform1f(this.getUniformLocation(name), f);
+    }
+
     /**
     * ...
     *

@@ -21,6 +21,7 @@ public class Model {
     protected final VertexBufferObject POSITION_BUFFER;
     protected final VertexBufferObject UV_BUFFER;
     protected final VertexBufferObject NORMAL_BUFFER;
+    protected final VertexBufferObject AMBIENT_OCCLUSION;
 
     protected final float[] POSITION_ARRAY;
     protected final float[] UV_ARRAY;
@@ -33,7 +34,7 @@ public class Model {
     */
 
     public Model(Vertex Vertex) {
-        this(Vertex.getPositions(), Vertex.getUVs(), Vertex.getNormals());
+        this(Vertex.getPositions(), Vertex.getUVs(), Vertex.getNormals(), Vertex.getAO());
     }
 
     /**
@@ -44,7 +45,7 @@ public class Model {
     * @param NORMAL_ARRAY ...
     */
 
-    public Model(float[] POSITION_ARRAY, float[] UV_ARRAY, float[] NORMAL_ARRAY) {
+    public Model(float[] POSITION_ARRAY, float[] UV_ARRAY, float[] NORMAL_ARRAY, float[] AO) {
         this.POSITION_ARRAY = POSITION_ARRAY;
         this.UV_ARRAY = UV_ARRAY;
         this.NORMAL_ARRAY = NORMAL_ARRAY;
@@ -89,6 +90,19 @@ public class Model {
         this.NORMAL_BUFFER.addData(GL_ARRAY_BUFFER, NORMAL_BUFFER, GL_DYNAMIC_DRAW);
 
         glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        // Ambient Occlusion
+        this.AMBIENT_OCCLUSION = new VertexBufferObject();
+        this.AMBIENT_OCCLUSION.bind(GL_ARRAY_BUFFER);
+
+        FloatBuffer AMBIENT_OCCLUSION_BUFFER = BufferUtils.createFloatBuffer(AO.length);
+        AMBIENT_OCCLUSION_BUFFER.put(AO);
+        AMBIENT_OCCLUSION_BUFFER.flip();
+
+        this.AMBIENT_OCCLUSION.addData(GL_ARRAY_BUFFER, AMBIENT_OCCLUSION_BUFFER, GL_DYNAMIC_DRAW);
+
+        glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -2,6 +2,8 @@ package org.a4z0.venture.chunk;
 
 import org.a4z0.venture.Array3d;
 import org.a4z0.venture.block.Block;
+import org.a4z0.venture.frustum.AABB;
+import org.a4z0.venture.frustum.Frustum;
 import org.a4z0.venture.model.Model;
 import org.a4z0.venture.vertex.BlockRenderer;
 import org.a4z0.venture.world.World;
@@ -22,6 +24,10 @@ public class Chunk implements Iterable<Block> {
     public final Array3d<Layer> Layers;
 
     public final Array3d<Integer> BLOCK_ARRAY;
+
+
+    public Frustum FRUSTUM;
+    public AABB axisAlignedBoudingBox;
 
     /**
     * Construct a {@link Chunk}.
@@ -69,6 +75,9 @@ public class Chunk implements Iterable<Block> {
 
         for(int y = -CHUNK_SIZE_Y; y < CHUNK_SIZE_Y; y++)
             this.Layers.set(0, y, 0, new Layer(this, y));
+
+        this.axisAlignedBoudingBox = new AABB(1, 1, 1, 2, 2, 2);
+        this.FRUSTUM = new Frustum();
     }
 
     /**
@@ -155,7 +164,13 @@ public class Chunk implements Iterable<Block> {
     */
 
     public void render(BlockRenderer renderer) {
+        /*this.FRUSTUM.updateFrustum(Venture.FIRST_PERSON_CAMERA);
+
+        if(!FRUSTUM.intersects(this.axisAlignedBoudingBox))
+            return;*/
+
         renderer.render(this.getX(), 0, this.getZ(), new Model(Mesh.transform(this)));
+        //renderer.render(new AABB(1, 1, 1, 2, 2, 2));
     }
 
     /**

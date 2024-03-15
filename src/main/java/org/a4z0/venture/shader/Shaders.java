@@ -11,11 +11,11 @@ import java.io.InputStream;
 
 public final class Shaders {
 
-    public static final String VERTEX_SHADER_V1_0 = getSource("assets/render/shader/vertex/1.0.shader");
-    public static final String FRAGMENT_SHADER_V1_0 = getSource("assets/render/shader/fragment/1.0.shader");
+    public static final String VERTEX_SHADER_V0_1 = getSource("assets/render/shader/vertex/0.1.glsl");
+    public static final String FRAGMENT_SHADER_V0_1 = getSource("assets/render/shader/fragment/0.1.glsl");
 
-    public static final String VERTEX_SHADER_V2_0 = getSource("assets/render/shader/vertex/2.0.shader");
-    public static final String FRAGMENT_SHADER_V2_0 = getSource("assets/render/shader/fragment/2.0.shader");
+    public static final String VERTEX_SHADER_V0_2 = getSource("assets/render/shader/vertex/0.2.glsl");
+    public static final String FRAGMENT_SHADER_V0_2 = getSource("assets/render/shader/fragment/0.2.glsl");
 
     /**
     * ...
