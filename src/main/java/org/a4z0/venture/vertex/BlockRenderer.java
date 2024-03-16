@@ -1,7 +1,7 @@
 package org.a4z0.venture.vertex;
 
 import org.a4z0.venture.frustum.AABB;
-import org.a4z0.venture.model.Model;
+import org.a4z0.venture.model.old.Model;
 import org.a4z0.venture.shader.ShaderProgram;
 import org.a4z0.venture.texture.Textures;
 import org.joml.Matrix4f;

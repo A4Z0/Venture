@@ -1,138 +1,147 @@
 package org.a4z0.venture.model;
 
-import org.a4z0.venture.vertex.Vertex;
-import org.a4z0.venture.vertex.VertexArrayObject;
-import org.a4z0.venture.vertex.VertexBufferObject;
-import org.lwjgl.BufferUtils;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL30.*;
+import java.io.*;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 /**
-* ...
+* A {@link Model} represented by Vertices, UVs and Normals.
 */
 
 public class Model {
 
-    protected final VertexArrayObject VAO;
+    public static final int DEFAULT_BUFFER_SIZE = 4096;
 
-    protected final VertexBufferObject POSITION_BUFFER;
-    protected final VertexBufferObject UV_BUFFER;
-    protected final VertexBufferObject NORMAL_BUFFER;
-    protected final VertexBufferObject AMBIENT_OCCLUSION;
+    public static final Token VERTEX_TOKEN = new Token("v");
+    public static final Token UV_TOKEN = new Token("vt");
+    public static final Token NORMAL_TOKEN = new Token("vn");
 
-    protected final float[] POSITION_ARRAY;
-    protected final float[] UV_ARRAY;
-    protected final float[] NORMAL_ARRAY;
-
-    /**
-    * Construct a {@link Model}.
-    *
-    * @param Vertex ...
-    */
-
-    public Model(Vertex Vertex) {
-        this(Vertex.getPositions(), Vertex.getUVs(), Vertex.getNormals(), Vertex.getAO());
-    }
+    protected final float[] vertices;
+    protected final float[] uvs;
+    protected final float[] normals;
 
     /**
     * Construct a {@link Model}.
     *
-    * @param POSITION_ARRAY ...
-    * @param UV_ARRAY ...
-    * @param NORMAL_ARRAY ...
+    * @param vertices {@link Float Float} Array representing vertices of this {@link Model}.
+    * @param uvs {@link Float Float} Array representing UVs of this {@link Model}.
+    * @param normals {@link Float Float} Array representing normals of this {@link Model}.
     */
 
-    public Model(float[] POSITION_ARRAY, float[] UV_ARRAY, float[] NORMAL_ARRAY, float[] AO) {
-        this.POSITION_ARRAY = POSITION_ARRAY;
-        this.UV_ARRAY = UV_ARRAY;
-        this.NORMAL_ARRAY = NORMAL_ARRAY;
-
-        this.VAO = new VertexArrayObject();
-        this.VAO.bind();
-
-        // Vertex
-        this.POSITION_BUFFER = new VertexBufferObject();
-        this.POSITION_BUFFER.bind(GL_ARRAY_BUFFER);
-
-        FloatBuffer VERTEX_BUFFER = BufferUtils.createFloatBuffer(POSITION_ARRAY.length);
-        VERTEX_BUFFER.put(POSITION_ARRAY);
-        VERTEX_BUFFER.flip();
-
-        this.POSITION_BUFFER.addData(GL_ARRAY_BUFFER, VERTEX_BUFFER, GL_DYNAMIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        // Texture
-        this.UV_BUFFER = new VertexBufferObject();
-        this.UV_BUFFER.bind(GL_ARRAY_BUFFER);
-
-        FloatBuffer TEXTURE_BUFFER = BufferUtils.createFloatBuffer(UV_ARRAY.length);
-        TEXTURE_BUFFER.put(UV_ARRAY);
-        TEXTURE_BUFFER.flip();
-
-        this.UV_BUFFER.addData(GL_ARRAY_BUFFER, TEXTURE_BUFFER, GL_DYNAMIC_DRAW);
-
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        // Normal
-        this.NORMAL_BUFFER = new VertexBufferObject();
-        this.NORMAL_BUFFER.bind(GL_ARRAY_BUFFER);
-
-        FloatBuffer NORMAL_BUFFER = BufferUtils.createFloatBuffer(NORMAL_ARRAY.length);
-        NORMAL_BUFFER.put(NORMAL_ARRAY);
-        NORMAL_BUFFER.flip();
-
-        this.NORMAL_BUFFER.addData(GL_ARRAY_BUFFER, NORMAL_BUFFER, GL_DYNAMIC_DRAW);
-
-        glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        // Ambient Occlusion
-        this.AMBIENT_OCCLUSION = new VertexBufferObject();
-        this.AMBIENT_OCCLUSION.bind(GL_ARRAY_BUFFER);
-
-        FloatBuffer AMBIENT_OCCLUSION_BUFFER = BufferUtils.createFloatBuffer(AO.length);
-        AMBIENT_OCCLUSION_BUFFER.put(AO);
-        AMBIENT_OCCLUSION_BUFFER.flip();
-
-        this.AMBIENT_OCCLUSION.addData(GL_ARRAY_BUFFER, AMBIENT_OCCLUSION_BUFFER, GL_DYNAMIC_DRAW);
-
-        glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+    public Model(float[] vertices, float[] uvs, float[] normals) {
+        this.vertices = vertices;
+        this.uvs = uvs;
+        this.normals = normals;
     }
 
     /**
-    * @return ...
+    * @return a {@link Float} array with this {@link Model} vertices.
     */
 
-    public VertexArrayObject getVAO() {
-        return this.VAO;
+    public float[] getVertices() {
+        return this.vertices.clone();
     }
 
     /**
-    * @return ...
+    * @return a {@link Float} array with this {@link Model} UVs.
     */
 
-    public int getLength() {
-        return this.POSITION_ARRAY.length;
+    public float[] getUVs() {
+        return this.uvs.clone();
     }
 
     /**
-    * ...
+    * @return a {@link Float} array with this {@link Model} normals.
     */
 
-    public void delete() {
-        this.VAO.delete();
-        this.POSITION_BUFFER.delete();
-        this.UV_BUFFER.delete();
-        this.NORMAL_BUFFER.delete();
+    public float[] getNormals() {
+        return this.normals.clone();
+    }
+
+    /**
+    * Constructs a {@link Model} from an ".obj".
+    *
+    * @param URI {@link String String} URI of the ".obj" {@link File} in "resources/".
+    *
+    * @return a new {@link Model}.
+    */
+
+    public static Model getFrom(String URI) {
+        return getFrom(Path.of(URI));
+    }
+
+    /**
+    * Constructs a {@link Model} from an ".obj".
+    *
+    * @param path {@link Path} of the ".obj" {@link File} in "resources/".
+    *
+    * @return a new {@link Model}.
+    */
+
+    public static Model getFrom(Path path) {
+        try {
+            return getFrom(Model.class.getClassLoader().getResourceAsStream(path.toString()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+    * Constructs a {@link Model} from an ".obj".
+    *
+    * @param in {@link InputStream} from an ".obj" {@link File}.
+    *
+    * @return a new {@link Model}.
+    */
+
+    public static Model getFrom(InputStream in) throws IOException {
+        return getFrom(in, DEFAULT_BUFFER_SIZE);
+    }
+
+    /**
+    * Constructs a {@link Model} from an ".obj".
+    *
+    * @param in {@link InputStream} from an ".obj" {@link File}.
+    * @param bufferSize {@link Float} buffer size.
+    *
+    * @return a new {@link Model}.
+    */
+
+    public static Model getFrom(InputStream in, int bufferSize) throws IOException {
+        float[] vertices = new float[bufferSize];
+        float[] uvs = new float[bufferSize];
+        float[] normals = new float[bufferSize];
+
+        int vIndex = 0;
+        int uIndex = 0;
+        int nIndex = 0;
+
+        try(BufferedReader bR = new BufferedReader(new InputStreamReader(in))) {
+            String l;
+
+            while((l = bR.readLine()) != null) {
+                String[] Parts = l.split("\\s+");
+
+                if(Parts.length == 0 || Parts[0].equals("#"))
+                    continue;
+
+                if(VERTEX_TOKEN.matches(Parts[0])) {
+                    for(int i = 1; i < Parts.length; i++)
+                        vertices[vIndex++] = Float.parseFloat(Parts[i]);
+                } else if(UV_TOKEN.matches(Parts[0])) {
+                    for(int i = 1; i < Parts.length; i++)
+                        uvs[uIndex++] = Float.parseFloat(Parts[i]);
+                } else if(NORMAL_TOKEN.matches(Parts[0])) {
+                    for(int i = 1; i < Parts.length; i++)
+                        normals[nIndex++] = Float.parseFloat(Parts[i]);
+                }
+            }
+        }
+
+        return new Model(
+            Arrays.copyOfRange(vertices, 0, vIndex),
+            Arrays.copyOfRange(uvs, 0, uIndex),
+            Arrays.copyOfRange(normals, 0, nIndex)
+        );
     }
 }

@@ -4,7 +4,7 @@ import org.a4z0.venture.Array3d;
 import org.a4z0.venture.block.Block;
 import org.a4z0.venture.frustum.AABB;
 import org.a4z0.venture.frustum.Frustum;
-import org.a4z0.venture.model.Model;
+import org.a4z0.venture.model.old.Model;
 import org.a4z0.venture.vertex.BlockRenderer;
 import org.a4z0.venture.world.World;
 
