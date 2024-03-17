@@ -1,7 +1,6 @@
-package org.a4z0.venture.models;
+package org.a4z0.venture.model;
 
 import org.a4z0.venture.Interval;
-import org.a4z0.venture.model.Model;
 
 /*
 * Example of Loading an ".obj".
