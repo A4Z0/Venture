@@ -1,11 +1,10 @@
-package org.a4z0.venture.models;
+package org.a4z0.venture.vertex;
 
 import org.a4z0.venture.Interval;
 import org.a4z0.venture.model.Model;
-import org.a4z0.venture.vertex.Vertex;
 
-/**
-* How to load a ".obj".
+/*
+* Example of adding vertices from a ".obj".
 */
 
 public class VertexExample {
@@ -22,11 +21,6 @@ public class VertexExample {
     public static final Model CUBE_MODEL = Model.getFrom("assets/geometry/block.obj");
 
     public static Vertex VERTEX;
-
-    /**
-    * 1. Upload template.
-    * 2. Add Cube vertices.
-    */
 
     public static void main(String[] args) {
         Interval.reset();

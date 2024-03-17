@@ -3,17 +3,13 @@ package org.a4z0.venture.models;
 import org.a4z0.venture.Interval;
 import org.a4z0.venture.model.Model;
 
-/**
-* How to load a ".obj".
+/*
+* Example of Loading an ".obj".
 */
 
 public class ModelExample {
 
     public static Model CUBE_MODEL;
-
-    /**
-    * 1. Upload template.
-    */
 
     public static void main(String[] args) {
         Interval.reset();
