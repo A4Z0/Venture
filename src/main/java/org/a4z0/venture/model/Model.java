@@ -1,5 +1,8 @@
 package org.a4z0.venture.model;
 
+import org.a4z0.venture.Token;
+import org.a4z0.venture.vertex.Vertex;
+
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -19,6 +22,16 @@ public class Model {
     protected final float[] vertices;
     protected final float[] uvs;
     protected final float[] normals;
+
+    /**
+    * Construct a {@link Model}.
+    *
+    * @param vertex ...
+    */
+
+    public Model(Vertex vertex) {
+        this(vertex.getPositions(), vertex.getUVs(), vertex.getNormals());
+    }
 
     /**
     * Construct a {@link Model}.
@@ -108,9 +121,9 @@ public class Model {
     */
 
     public static Model getFrom(InputStream in, int bufferSize) throws IOException {
-        float[] vertices = new float[bufferSize];
-        float[] uvs = new float[bufferSize];
-        float[] normals = new float[bufferSize];
+        float[] vertices = new float[3 * bufferSize];
+        float[] uvs = new float[2 * bufferSize];
+        float[] normals = new float[3 * bufferSize];
 
         int vIndex = 0;
         int uIndex = 0;

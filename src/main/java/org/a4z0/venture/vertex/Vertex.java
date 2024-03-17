@@ -1,186 +1,295 @@
 package org.a4z0.venture.vertex;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
-* ...
+* A {@link Vertex} represented by Positions, UVs, Normals and AOs.
+*
+* <br>
+* <br>
+*
+* Each part of the Vertex is represented by its index.
+*
+* <ul name="Parts">
+*   <li>0: Positions</li>
+*   <li>1: UVs</li>
+*   <li>2: Normals</li>
+*   <li>3: AOs</li>
+* </ul>
 */
 
 public class Vertex {
 
-    protected final List<Float> STREAM_POSITIONS;
-    protected final List<Float> STREAM_UVs;
-    protected final List<Float> STREAM_NORMALS;
-    protected final List<Float> STREAM_AO;
+    protected final List<List<Float>> parts;
 
     /**
     * Construct a {@link Vertex}.
     */
 
     public Vertex() {
-        this.STREAM_POSITIONS = new ArrayList<>();
-        this.STREAM_UVs = new ArrayList<>();
-        this.STREAM_NORMALS = new ArrayList<>();
-        this.STREAM_AO = new ArrayList<>();
+        this.parts = List.of(
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new ArrayList<>()
+        );
     }
 
     /**
-    * Construct a {@link Vertex}.
-    *
-    * @param POSITIONS ...
-    * @param UVs ...
-    * @param NORMALS ...
+    * @return the length of positions.
     */
 
-    public Vertex(Vector3f[] POSITIONS, Vector2f[] UVs, Vector3f[] NORMALS, float[] AO) {
-        this();
-
-        this.vertex(POSITIONS, UVs, NORMALS, AO);
+    public int getLength() {
+        return (Vertex.secure(0, this).size() / 3);
     }
 
     /**
-    * Construct a {@link Vertex}.
+    * Adds Positions to this {@link Vertex} and returns itself.
     *
-    * @param POSITIONS ...
-    * @param UVs ...
-    * @param NORMALS ...
+    * @param positions Positions that will be added.
+    *
+    * @return this {@link Vertex}.
     */
 
-    public Vertex(float[] POSITIONS, float[] UVs, float[] NORMALS, float[] AO) {
-        this();
-
-        this.vertex(POSITIONS, UVs, NORMALS, AO);
+    public Vertex vertex(float[] positions) {
+        return this.vertex(positions, new float[2 * (positions.length)]);
     }
 
     /**
-    * ...
+    * Adds Positions and UVs to this {@link Vertex} and returns itself.
     *
-    * @param POSITIONS ...
-    * @param UVs ...
-    * @param NORMALS ...
+    * @param positions Positions that will be added.
+    * @param uvs UVs that will be added.
     *
-    * @return ...
+    * @return this {@link Vertex}.
     */
 
-    public Vertex vertex(Vector3f[] POSITIONS, Vector2f[] UVs, Vector3f[] NORMALS, float[] AO) {
-        for(Vector3f POSITION : POSITIONS) {
-            this.STREAM_POSITIONS.add(POSITION.x);
-            this.STREAM_POSITIONS.add(POSITION.y);
-            this.STREAM_POSITIONS.add(POSITION.z);
-        }
-
-        for(Vector2f UV : UVs) {
-            this.STREAM_UVs.add(UV.x);
-            this.STREAM_UVs.add(UV.y);
-        }
-
-        for(Vector3f NORMAL : NORMALS) {
-            this.STREAM_NORMALS.add(NORMAL.x);
-            this.STREAM_NORMALS.add(NORMAL.y);
-            this.STREAM_NORMALS.add(NORMAL.z);
-        }
-
-        for(int i = 0; i < AO.length; i += 4) {
-            this.STREAM_AO.add(AO[i]);
-            this.STREAM_AO.add(AO[i + 1]);
-            this.STREAM_AO.add(AO[i + 2]);
-            this.STREAM_AO.add(AO[i + 3]);
-        }
-
-        return this;
+    public Vertex vertex(float[] positions, float[] uvs) {
+        return this.vertex(positions, uvs, new float[3 * (positions.length / 3)]);
     }
 
     /**
-    * ...
+    * Adds Positions, UVs and Normals to this {@link Vertex} and returns itself.
     *
-    * @param POSITIONS ...
-    * @param UVs ...
-    * @param NORMALS ...
+    * @param positions Positions that will be added.
+    * @param uvs UVs that will be added.
+    * @param normals Normals that will be added.
     *
-    * @return ...
+    * @return this {@link Vertex}.
     */
 
-    public Vertex vertex(float[] POSITIONS, float[] UVs, float[] NORMALS, float[] AO) {
-        for(int i = 0; i < POSITIONS.length; i += 3) {
-            this.STREAM_POSITIONS.add(POSITIONS[i]);
-            this.STREAM_POSITIONS.add(POSITIONS[i + 1]);
-            this.STREAM_POSITIONS.add(POSITIONS[i + 2]);
-        }
-
-        for(int i = 0; i < UVs.length; i += 2) {
-            this.STREAM_UVs.add(UVs[i]);
-            this.STREAM_UVs.add(UVs[i + 1]);
-        }
-
-        for(int i = 0; i < NORMALS.length; i += 3) {
-            this.STREAM_NORMALS.add(NORMALS[i]);
-            this.STREAM_NORMALS.add(NORMALS[i + 1]);
-            this.STREAM_NORMALS.add(NORMALS[i + 2]);
-        }
-
-        for(int i = 0; i < AO.length; i += 4) {
-            this.STREAM_AO.add(AO[i]);
-            this.STREAM_AO.add(AO[i + 1]);
-            this.STREAM_AO.add(AO[i + 2]);
-            this.STREAM_AO.add(AO[i + 3]);
-        }
-
-        return this;
+    public Vertex vertex(float[] positions, float[] uvs, float[] normals) {
+        return this.vertex(positions, uvs, normals, new float[4 * (positions.length / 3)]);
     }
 
     /**
-    * @return ...
+    * Adds Positions, UVs, Normals and AOs to this {@link Vertex} and returns itself.
+    *
+    * @param positions Positions that will be added.
+    * @param uvs UVs that will be added.
+    * @param normals Normals that will be added.
+    * @param aos AOs that will be added.
+    *
+    * @return this {@link Vertex}.
+    */
+
+    public Vertex vertex(float[] positions, float[] uvs, float[] normals, float[] aos) {
+        for(int i = 0; i < (positions.length / 3); i++) {
+            Vertex.add(i, 3, Vertex.secure(0, this), positions);
+            Vertex.add(i, 2, Vertex.secure(1, this), uvs);
+            Vertex.add(i, 3, Vertex.secure(2, this), normals);
+            Vertex.add(i, 4, Vertex.secure(3, this), aos);
+            Vertex.add(i, 3, Vertex.secure(0, true, this), new float[positions.length]);
+            Vertex.add(i, 2, Vertex.secure(1, true, this), new float[uvs.length]);
+            Vertex.add(i, 3, Vertex.secure(2, true, this), new float[normals.length]);
+            Vertex.add(i, 4, Vertex.secure(3, true, this), new float[aos.length]);
+        } return this;
+    }
+
+    public Vertex offset(int index, int where, float[] array) {
+        return this.offset(index, this.getLength(), where, array);
+    }
+
+    /**
+    * Offsets a specific {@link Vertex} part.
+    *
+    * @param index Index of the {@link Vertex} where the offset will start.
+    * @param until Index of the {@link Vertex} where the offset will end.
+    *
+    * <br>
+    *
+    * @param where Part of the {@link Vertex} represented by an <a href=#Parts>Index</a> will undergo the offset.
+    * A value that isn't represented in the <a href=#Parts>Index</a> will result in no offset being applied.
+    *
+    * <br>
+    *
+    * @param array An Array containing the offset values.
+    *
+    * @return this {@link Vertex}.
+    */
+
+    public Vertex offset(int index, int until, int where, float[] array) {
+        for(int i = index; i < until; i++) {
+            Vertex.set(i, switch (where) {
+                case 0, 2 -> 3;
+                case 1 -> 2;
+                default -> 4;
+            }, Vertex.secure(where, true, this), array);
+        } return this;
+    }
+
+    public Vertex shift(int index, int where, float[] array) {
+        return this.shift(index, this.getLength(), where, array);
+    }
+
+    /**
+    * Shifts a specific {@link Vertex} part.
+    *
+    * @param index Index of the {@link Vertex} where the shift will start.
+    * @param until Index of the {@link Vertex} where the shift will end.
+    *
+    * <br>
+    *
+    * @param where Part of the {@link Vertex} represented by an <a href=#Parts>Index</a> will undergo the shift.
+    * A value that isn't represented in the <a href=#Parts>Index</a> will result in no shift being applied.
+    *
+    * <br>
+    *
+    * @param array An Array containing the shift values.
+    *
+    * @return this {@link Vertex}.
+    */
+
+    public Vertex shift(int index, int until, int where, float[] array) {
+        for(int i = index; i < until; i++) {
+            Vertex.mix(i, switch (where) {
+                case 0, 2 -> 3;
+                case 1 -> 2;
+                default -> 4;
+            }, Vertex.secure(where, this), array);
+        } return this;
+    }
+
+    /**
+    * @return the Positions of this {@link Vertex}.
     */
 
     public float[] getPositions() {
-        float[] FLOAT_ARRAY = new float[this.STREAM_POSITIONS.size()];
-
-        for(int i = 0; i < this.STREAM_POSITIONS.size(); i++)
-            FLOAT_ARRAY[i] = this.STREAM_POSITIONS.get(i);
-
-        return FLOAT_ARRAY;
+        return Vertex.parse(0, this);
     }
 
     /**
-    * @return ...
+    * @return the UVs of this {@link Vertex}.
     */
 
     public float[] getUVs() {
-        float[] FLOAT_ARRAY = new float[this.STREAM_UVs.size()];
-
-        for(int i = 0; i < this.STREAM_UVs.size(); i++)
-            FLOAT_ARRAY[i] = this.STREAM_UVs.get(i);
-
-        return FLOAT_ARRAY;
+        return Vertex.parse(1, this);
     }
 
     /**
-    * @return ...
+    * @return the Normals of this {@link Vertex}.
     */
 
     public float[] getNormals() {
-        float[] FLOAT_ARRAY = new float[this.STREAM_NORMALS.size()];
+        return Vertex.parse(2, this);
+    }
 
-        for(int i = 0; i < this.STREAM_NORMALS.size(); i++)
-            FLOAT_ARRAY[i] = this.STREAM_NORMALS.get(i);
+    /**
+    * @return the AOS of this {@link Vertex}.
+    */
+
+    public float[] getAOs() {
+        return Vertex.parse(3, this);
+    }
+
+    /**
+    * ...
+    *
+    * @param Index ...
+    * @param Offset ...
+    * @param FLOAT_LIST ...
+    * @param FLOAT_ARRAY ...
+    */
+
+    protected static void mix(int Index, int Offset, List<Float> FLOAT_LIST, float[] FLOAT_ARRAY) {
+        for(int i = 0; i < Offset; i++)
+            FLOAT_LIST.set((Index * Offset) + i, FLOAT_LIST.get((Index * Offset) + i) + FLOAT_ARRAY[i * Offset]);
+    }
+
+    /**
+    * ...
+    *
+    * @param Index ...
+    * @param Offset ...
+    * @param FLOAT_LIST ...
+    * @param FLOAT_ARRAY ...
+    */
+
+    protected static void set(int Index, int Offset, List<Float> FLOAT_LIST, float[] FLOAT_ARRAY) {
+        for(int i = 0; i < Offset; i++)
+            FLOAT_LIST.set((Index * Offset) + i, FLOAT_ARRAY[i * Offset]);
+    }
+
+    /**
+    * ...
+    *
+    * @param Index ...
+    * @param Offset ...
+    * @param FLOAT_LIST ...
+    * @param FLOAT_ARRAY ...
+    */
+
+    protected static void add(int Index, int Offset, List<Float> FLOAT_LIST, float[] FLOAT_ARRAY) {
+        for(int i = 0; i < Offset; i++)
+            FLOAT_LIST.add(FLOAT_ARRAY[(Index * Offset) + i]);
+    }
+
+    /**
+    * ...
+    *
+    * @param index ...
+    * @param Vertex ...
+    *
+    * @return ...
+    */
+
+    protected static float[] parse(int index, Vertex Vertex) {
+        float[] FLOAT_ARRAY = new float[secure(index, Vertex).size()];
+
+        for(int i = 0; i < FLOAT_ARRAY.length; i++)
+            FLOAT_ARRAY[i] = (secure(index, Vertex).get(i) + secure(index, true, Vertex).get(i));
 
         return FLOAT_ARRAY;
     }
 
     /**
+    * ...
+    *
+    * @param index ...
+    * @param vertex ...
+    *
     * @return ...
     */
 
-    public float[] getAO() {
-        float[] FLOAT_ARRAY = new float[this.STREAM_AO.size()];
+    protected static List<Float> secure(int index, Vertex vertex) {
+        return secure(index, false, vertex);
+    }
 
-        for(int i = 0; i < this.STREAM_AO.size(); i++)
-            FLOAT_ARRAY[i] = this.STREAM_AO.get(i);
+    /**
+    * ...
+    *
+    * @param index ...
+    * @param isOffset ...
+    * @param vertex ...
+    *
+    * @return ...
+    */
 
-        return FLOAT_ARRAY;
+    protected static List<Float> secure(int index, boolean isOffset, Vertex vertex) {
+        return !isOffset ? vertex.parts.get(index) : vertex.parts.get(index + 4);
     }
 }

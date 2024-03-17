@@ -1,7 +1,6 @@
 package org.a4z0.venture.light;
 
-import org.a4z0.venture.position.Position;
-import org.joml.Vector3f;
+import org.a4z0.venture.world.Position;
 
 /**
 * ...
@@ -9,61 +8,87 @@ import org.joml.Vector3f;
 
 public class Light {
 
-    protected final Position Position;
-    protected final Vector3f Color;
-    protected final float Intensity;
+    public static final Light LIGHT_LEVEL_1 = new Light(255, 255, 255, 1);
+    public static final Light LIGHT_LEVEL_2 = new Light(255, 255, 255, 2);
+    public static final Light LIGHT_LEVEL_3 = new Light(255, 255, 255, 3);
+    public static final Light LIGHT_LEVEL_4 = new Light(255, 255, 255, 4);
+    public static final Light LIGHT_LEVEL_5 = new Light(255, 255, 255, 5);
+    public static final Light LIGHT_LEVEL_6 = new Light(255, 255, 255, 6);
+    public static final Light LIGHT_LEVEL_7 = new Light(255, 255, 255, 7);
+    public static final Light LIGHT_LEVEL_8 = new Light(255, 255, 255, 8);
+    public static final Light LIGHT_LEVEL_9 = new Light(255, 255, 255, 9);
+    public static final Light LIGHT_LEVEL_10 = new Light(255, 255, 255, 10);
+    public static final Light LIGHT_LEVEL_11 = new Light(255, 255, 255, 11);
+    public static final Light LIGHT_LEVEL_12 = new Light(255, 255, 255, 12);
+    public static final Light LIGHT_LEVEL_13 = new Light(255, 255, 255, 13);
+    public static final Light LIGHT_LEVEL_14 = new Light(255, 255, 255, 14);
+    public static final Light LIGHT_LEVEL_15 = new Light(255, 255, 255, 15);
+
+    protected final float r, g, b;
+    protected final int level;
 
     /**
     * Construct a {@link Light}.
     *
-    * @param x ...
-    * @param y ...
-    * @param z ...
     * @param r ...
     * @param g ...
     * @param b ...
-    * @param i ...
+    * @param level ...
     */
 
-    public Light(int x, int y, int z, float r, float g, float b, float i) {
-        this(new Position(x, y, z), new Vector3f(r, g, b), i);
+    protected Light(int r, int g, int b, int level) {
+        this(r / 255f, g / 255f, b / 255f, level);
     }
 
     /**
     * Construct a {@link Light}.
     *
-    * @param Position ...
-    * @param Color ...
-    * @param Intensity ...
+    * @param r ...
+    * @param g ...
+    * @param b ...
+    * @param level ...
     */
 
-    public Light(Position Position, Vector3f Color, float Intensity) {
-        this.Position = Position;
-        this.Color = Color;
-        this.Intensity = Intensity;
+    protected Light(float r, float g, float b, int level) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.level = level;
     }
 
     /**
     * @return ...
     */
+
+    public float getRed() {
+        return this.r;
+    }
+
+    /**
+    * @return ...
+    */
+
+    public float getGreen() {
+        return this.g;
+    }
+
+    /**
+    * @return ...
+    */
+
+    public float getBlue() {
+        return this.b;
+    }
+
+    /**
+    * @return ...
+    */
+
+    public int getLevel() {
+        return this.level;
+    }
 
     public Position getPosition() {
-        return this.Position;
-    }
-
-    /**
-    * @return ...
-    */
-
-    public Vector3f getColor() {
-        return this.Color;
-    }
-
-    /**
-     * @return ...
-     */
-
-    public float getIntensity() {
-        return this.Intensity;
+        return new Position(0, 8, 0);
     }
 }

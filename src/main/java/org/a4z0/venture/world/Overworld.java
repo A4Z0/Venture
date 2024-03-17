@@ -1,7 +1,7 @@
 package org.a4z0.venture.world;
 
-import org.a4z0.venture.block.Block;
-import org.a4z0.venture.chunk.Chunk;
+import org.a4z0.venture.world.block.Block;
+import org.a4z0.venture.world.chunk.Chunk;
 
 /**
 * ...

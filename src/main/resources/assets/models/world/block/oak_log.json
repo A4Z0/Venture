@@ -1,0 +1,12 @@
+{
+  "name": "oak_log",
+  "textures": [
+    "oak_log.png",
+    "oak_log.png",
+    "oak_log.png",
+    "oak_log.png",
+    "oak_log_crumb.png",
+    "oak_log_crumb.png"
+  ],
+  "geometry": "block/cube.obj"
+}

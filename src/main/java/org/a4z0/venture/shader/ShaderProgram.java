@@ -76,6 +76,10 @@ public class ShaderProgram {
         glUniform3f(this.getUniformLocation(name), x, y, z);
     }
 
+    public void setUniform(String name, float x, float y, float z, float w) {
+        glUniform4f(this.getUniformLocation(name), x, y, z, w);
+    }
+
     public void setUniform(String name, float f) {
         glUniform1f(this.getUniformLocation(name), f);
     }
@@ -124,6 +128,10 @@ public class ShaderProgram {
 
         if(glGetProgrami(this.SHADER_PROGRAM_ID, GL_LINK_STATUS) == 0)
             throw new RuntimeException("Unable to link this Shader Program.");
+    }
+
+    public void unbind() {
+        glUseProgram(0);
     }
 
     /**

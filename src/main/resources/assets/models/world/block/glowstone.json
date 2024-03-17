@@ -1,0 +1,6 @@
+{
+  "name": "glowstone",
+  "texture": "glowstone.png",
+  "geometry": "block/cube.obj",
+  "light": 8
+}

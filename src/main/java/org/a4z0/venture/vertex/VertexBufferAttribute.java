@@ -4,27 +4,26 @@ package org.a4z0.venture.vertex;
 * ...
 */
 
-@Deprecated
 public class VertexBufferAttribute {
 
-    protected final Type A;
+    protected final VertexBufferObject A;
     protected final int B;
     protected final int C;
 
     /**
     * Construct a {@link VertexBufferAttribute}.
     *
-    * @param ATTRIBUTE_TYPE ...
+    * @param VAO ...
     * @param ATTRIBUTE_INDEX ...
-    * @param ATTRIBUTE_LENGTH ...           
+    * @param ATTRIBUTE_LENGTH ...
     */
 
     public VertexBufferAttribute(
-        Type ATTRIBUTE_TYPE,
+        VertexBufferObject VAO,
         int ATTRIBUTE_INDEX,
         int ATTRIBUTE_LENGTH
     ) {
-        this.A = ATTRIBUTE_TYPE;
+        this.A = VAO;
         this.B = ATTRIBUTE_INDEX;
         this.C = ATTRIBUTE_LENGTH;
     }
@@ -33,7 +32,7 @@ public class VertexBufferAttribute {
     * @return ...
     */
 
-    public Type getType() {
+    public VertexBufferObject getVBO() {
         return this.A;
     }
 
@@ -51,15 +50,5 @@ public class VertexBufferAttribute {
 
     public int getSize() {
         return this.C;
-    }
-
-    /**
-    * ...
-    */
-
-    public enum Type {
-        VERTEX,
-        UV,
-        NORMAL
     }
 }
