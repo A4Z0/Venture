@@ -1,7 +1,8 @@
 package org.a4z0.venture.vertex;
 
-import org.a4z0.venture.Interval;
-import org.a4z0.venture.model.Model;
+import org.a4z0.venture.util.Interval;
+import org.a4z0.venture.deprecated.model.Model;
+import org.a4z0.venture.gl.vertex.Vertex;
 
 /*
 * Example of adding vertices from a ".obj".

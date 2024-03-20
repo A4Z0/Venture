@@ -1,8 +1,7 @@
 package org.a4z0.venture.camera;
 
-import org.joml.Matrix4fc;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
+import org.a4z0.venture.world.position.Position;
+import org.joml.Matrix4d;
 
 /**
 * ...
@@ -10,59 +9,29 @@ import org.joml.Vector3fc;
 
 public interface Camera {
 
-    float DEFAULT_FAR_PLANE = 1000f;
-    float DEFAULT_NEAR_PLANE = 0.1f;
-    Vector3fc DEFAULT_POSITION = new Vector3f(0, 0, 0);
-    Vector3fc DEFAULT_WORLD_UP = new Vector3f(0, 1, 0);
+    double DEFAULT_FAR_PLANE = 1000d;
+    double DEFAULT_NEAR_PLANE = 0.1d;
+
+    double DEFAULT_FOV = 80d;
+
+    double DEFAULT_PITCH = 0d;
+    double DEFAULT_YAW = -90d;
 
     /**
-    * ...
-    *
-    * @param x ...
-    * @param y ...
-    * @param z ...
+    * @return the {@link Camera} Projection {@link Matrix4d Matrix}.
     */
 
-    default void setPosition(float x, float y, float z) {
-        this.setPosition(new Vector3f(x, y, z));
-    }
+    Matrix4d getProjection();
 
     /**
-    * ...
-    *
-    * @param vector3f ...
+    * @return the {@link Camera} View {@link Matrix4d Matrix}.
     */
 
-    void setPosition(Vector3f vector3f);
+    Matrix4d getView();
 
     /**
-    * ...
-    *
-    * @param yaw ...
-    * @param pitch ...
+    * @return the {@link Camera} {@link Position}.
     */
 
-    default void setRotation(float yaw, float pitch) {
-        this.setRotation(new Vector3f(0, pitch, yaw));
-    }
-
-    /**
-    * ...
-    *
-    * @param vector3dc ...
-    */
-
-    void setRotation(Vector3f vector3dc);
-
-    /**
-    * @return ...
-    */
-
-    Matrix4fc getProjection();
-
-    /**
-    * @return ...
-    */
-
-    Matrix4fc getView();
+    Position getPosition();
 }

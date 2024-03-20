@@ -1,26 +1,21 @@
 package org.a4z0.venture.world.chunk;
 
-import org.a4z0.venture.Array3d;
-import org.a4z0.venture.world.block.Block;
-import org.a4z0.venture.render.world.chunk.ChunkRenderer;
+import org.a4z0.venture.world.TileMap;
 import org.a4z0.venture.world.World;
+import org.a4z0.venture.world.material.Material;
 
 /**
 * ...
 */
 
-public class Chunk implements Iterable<Block> {
+public class Chunk implements TileMap {
 
-    public static final int CHUNK_SIZE_X = 16 + 1;
-    public static final int CHUNK_SIZE_Y = 64 + 1;
-    public static final int CHUNK_SIZE_Z = 16 + 1;
-    public static final int CHUNK_TOTAL_SIZE  = CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z;
+    public static final int CHUNK_SIZE = 32 + 1;
 
     protected final World WORLD;
     protected final int X, Z;
-    public final Array3d<Layer> Layers;
 
-    public final Array3d<Integer> BLOCK_ARRAY;
+    protected final int[] TILE_MAP = new int[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
     /**
     * Construct a {@link Chunk}.
@@ -34,40 +29,6 @@ public class Chunk implements Iterable<Block> {
         this.X = X;
         this.Z = Z;
         this.WORLD = WORLD;
-        this.BLOCK_ARRAY = new Array3d<>(
-            Integer.class,
-            CHUNK_SIZE_X,
-            0,
-            -CHUNK_SIZE_X,
-            -this.X,
-            CHUNK_SIZE_Y,
-            0,
-            -CHUNK_SIZE_Y,
-            0,
-            CHUNK_SIZE_Z,
-            0,
-            -CHUNK_SIZE_Z,
-            -this.Z
-        );
-
-        this.Layers = new Array3d<>(
-            Layer.class,
-            1,
-            0,
-            0,
-            0,
-            CHUNK_SIZE_Y,
-            0,
-            -CHUNK_SIZE_Y,
-            0,
-            1,
-            0,
-            0,
-           0
-        );
-
-        for(int y = -CHUNK_SIZE_Y; y < CHUNK_SIZE_Y; y++)
-            this.Layers.set(0, y, 0, new Layer(this, y));
     }
 
     /**
@@ -94,75 +55,28 @@ public class Chunk implements Iterable<Block> {
         return this.WORLD;
     }
 
-    /**
-    * @return ...
-    */
+    @Override
+    public void setBlock(int X, int Y, int Z, Material Material) {
+        int Index = (Y * CHUNK_SIZE * CHUNK_SIZE) + (Z * CHUNK_SIZE) + X;
 
-    public Layer[] getLayers() {
-        return this.Layers.ARRAY;
+        if(Index > this.TILE_MAP.length || Index < 0)
+            return;
+
+        TILE_MAP[Index] = (Material.ordinal() + 1);
     }
-
-    /**
-    * @return ...
-    */
-
-    public Layer getLayerAt(int Y) {
-        return this.Layers.get(0, Y, 0);
-    }
-
-    /**
-    * @return ...
-    */
-
-    public Block[] getBlocks() {
-        Block[] BLOCK_ARRAY = new Block[(2 * CHUNK_SIZE_X) * (2 * CHUNK_SIZE_Y) * (2 * CHUNK_SIZE_Z)];
-
-        int i = 0;
-
-        for(Block BLOCK : this)
-            BLOCK_ARRAY[i++] = BLOCK;
-
-        return BLOCK_ARRAY;
-    }
-
-    /**
-    * ...
-    *
-    * @param BLOCK ...
-    */
-
-    public void setBlock(Block BLOCK) {
-        BLOCK_ARRAY.set(BLOCK.getPosition().getX(), BLOCK.getPosition().getY(), BLOCK.getPosition().getZ(), BlockRegister.setBlock(BLOCK));
-    }
-
-    /**
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
-    *
-    * @return ...
-    */
-
-    public Block getBlock(int X, int Y, int Z) {
-        return BlockRegister.getBlock(BLOCK_ARRAY.get(X, Y, Z));
-    }
-
-    /**
-    * ...
-    *
-    * @param renderer ...
-    */
-
-    public void render(ChunkRenderer renderer) {
-        renderer.render(this);
-    }
-
-    /**
-    * @return a {@link ChunkIterator Chunk Iterator}.
-    */
 
     @Override
-    public ChunkIterator iterator() {
-        return new ChunkIterator(this);
+    public Material getBlock(int X, int Y, int Z) {
+        int Index = (Y * CHUNK_SIZE * CHUNK_SIZE) + (Z * CHUNK_SIZE) + X;
+
+        if(Index > this.TILE_MAP.length || Index < 0)
+            return null;
+
+        int ID = TILE_MAP[Index];
+
+        if(ID == 0 || ID > Material.values().length)
+            return null;
+
+        return Material.values()[ID - 1];
     }
 }

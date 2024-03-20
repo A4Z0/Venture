@@ -1,7 +1,8 @@
 package org.a4z0.venture.world;
 
-import org.a4z0.venture.world.block.Block;
 import org.a4z0.venture.world.chunk.Chunk;
+import org.a4z0.venture.world.enviroment.Sky;
+import org.a4z0.venture.world.material.Material;
 
 /**
 * ...
@@ -32,17 +33,17 @@ public class Overworld implements World {
     }
 
     @Override
-    public Chunk getChunkAt(int X, int Z) {
+    public Chunk getChunkAt(int x, int z) {
         return this.CHUNK_ARRAY[0];
     }
 
     @Override
-    public void setBlock(Block BLOCK) {
-        this.getChunkAt(BLOCK.getPosition().getX(), BLOCK.getPosition().getZ()).setBlock(BLOCK);
+    public void setBlock(int x, int y, int z, Material material) {
+        this.getChunkAt(x, z).setBlock(x, y, z, material);
     }
 
     @Override
-    public Block getBlock(int X, int Y, int Z) {
-        return this.getChunkAt(X, Z).getBlock(X, Y, Z);
+    public Material getBlock(int x, int y, int z) {
+        return this.getChunkAt(x, z).getBlock(x, y, z);
     }
 }

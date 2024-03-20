@@ -1,54 +1,34 @@
 package org.a4z0.venture.world;
 
-import org.a4z0.venture.world.block.Block;
 import org.a4z0.venture.world.chunk.Chunk;
+import org.a4z0.venture.world.enviroment.Sky;
 
 /**
 * ...
 */
 
-public interface World {
+public interface World extends TileMap {
 
     /**
-    * @return ...
+    * @return the {@link Sky} of this {@link World}.
     */
 
     Sky getSky();
 
     /**
-    * @return ...
+    * @return an Array of {@link Chunk Chunks} that have been loaded.
     */
 
     Chunk[] getChunks();
 
     /**
-    * ...
+    * Returns a {@link Chunk} from this {@link World}.
     *
-    * @param X ...
-    * @param Z ...
+    * @param x X-Axis.
+    * @param z Y-Axis.
     *
-    * @return ...
+    * @return a {@link Chunk}.
     */
 
-    Chunk getChunkAt(int X, int Z);
-
-    /**
-    * ...
-    *
-    * @param BLOCK ...
-    */
-
-    void setBlock(Block BLOCK);
-
-    /**
-    * ...
-    *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
-    *
-    * @return ...
-    */
-
-    Block getBlock(int X, int Y, int Z);
+    Chunk getChunkAt(int x, int z);
 }
