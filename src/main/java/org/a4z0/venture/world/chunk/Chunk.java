@@ -62,7 +62,7 @@ public class Chunk implements TileMap {
         if(Index > this.TILE_MAP.length || Index < 0)
             return;
 
-        TILE_MAP[Index] = (Material.ordinal() + 1);
+        TILE_MAP[Index] = Material.ordinal();
     }
 
     @Override
@@ -77,6 +77,6 @@ public class Chunk implements TileMap {
         if(ID == 0 || ID > Material.values().length)
             return null;
 
-        return Material.values()[ID - 1];
+        return Material.values()[ID];
     }
 }

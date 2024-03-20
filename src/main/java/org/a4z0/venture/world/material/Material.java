@@ -14,12 +14,21 @@ import java.util.Map;
 */
 
 public enum Material {
+    AIR,
     DIRT(Textures.DIRT),
     BEDROCK(Textures.BEDROCK),
     GLOWSTONE(Textures.GLOWSTONE),
     OAK_LOG(Textures.OAK_LOG, Textures.OAK_LOG, Textures.OAK_LOG, Textures.OAK_LOG, Textures.OAK_LOG_CRUMB, Textures.OAK_LOG_CRUMB);
 
     private final Map<Direction, Address> TEXTURE_BY_SIDE;
+
+    /**
+    * Construct a {@link Material}.
+    */
+
+    Material() {
+        this(null);
+    }
 
     /**
     * Construct a {@link Material}.
@@ -50,7 +59,10 @@ public enum Material {
         Address TOP,
         Address BOTTOM
     ) {
-        this.TEXTURE_BY_SIDE = Map.of(Direction.NORTH, NORTH, Direction.SOUTH, SOUTH, Direction.EAST, EAST, Direction.WEST, WEST, Direction.TOP, TOP, Direction.BOTTOM, BOTTOM);
+        if(NORTH == null)
+            this.TEXTURE_BY_SIDE = null;
+        else
+            this.TEXTURE_BY_SIDE = Map.of(Direction.NORTH, NORTH, Direction.SOUTH, SOUTH, Direction.EAST, EAST, Direction.WEST, WEST, Direction.TOP, TOP, Direction.BOTTOM, BOTTOM);
     }
 
     /**
@@ -73,6 +85,9 @@ public enum Material {
     */
 
     public void vertex(Vertex Vertex, int X, int Y, int Z) {
+        if(this.equals(AIR))
+            return;
+
         for(Direction Dir : Direction.values())
             if(Utils.getAt(X, Y, Z, Dir) == null)
                 BlockVertex.stream(Vertex, Dir, X, Y, Z, this.getID(Dir));

@@ -49,6 +49,7 @@ public final class Venture {
 
         // Window
         WINDOW = new Window();
+        WINDOW.setVsync(false);
 
         glfwWindowHint(GLFW_SAMPLES, 16);
 
@@ -74,9 +75,9 @@ public final class Venture {
         // Tile Map
         WORLD = new Overworld();
 
-        for(int x = 0; x < 16; x++) {
-            for(int y = 0; y < 1; y++) {
-                for (int z = 0; z < 16; z++) {
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++) {
+                for (int z = 0; z < 8; z++) {
                     WORLD.setBlock(x, y, z, Material.DIRT);
                 }
             }
@@ -110,6 +111,11 @@ public final class Venture {
             Matrix4d view = CAMERA.getView();
             Matrix4d projection = CAMERA.getProjection();
             BlockPosition blockPosition = Utils.getDirAt(CAMERA.getPosition(), 5);
+
+            if(Input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+                if(blockPosition != null)
+                    WORLD.setBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), Material.AIR);
+            }
 
             Shaders.BLOCK_SHADER_PROGRAM.bind();
             Shaders.BLOCK_SHADER_PROGRAM.setUniform("camera_projection", projection);

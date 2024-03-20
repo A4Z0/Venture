@@ -14,7 +14,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 * ...
 */
 
-public class CrossRenderer extends VertexRenderer {
+public class CrossRenderer {
+
+    protected final ShaderProgram SHADER_PROGRAM;
 
     /**
     * Construct a {@link CrossRenderer}.
@@ -23,7 +25,7 @@ public class CrossRenderer extends VertexRenderer {
     */
 
     public CrossRenderer(ShaderProgram SHADER_PROGRAM) {
-        super(SHADER_PROGRAM);
+        this.SHADER_PROGRAM = SHADER_PROGRAM;
     }
 
     public void renderAim() {
