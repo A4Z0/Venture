@@ -11,50 +11,64 @@ import static org.lwjgl.opengl.GL15.*;
 
 public class VertexBuffer {
 
-    protected final VertexArrayObject VAO;
-    protected final List<VertexBufferObject> VBOs;
+    protected final VertexArrayObject VAO = new VertexArrayObject();
+    protected final List<VertexBufferObject> VBOs = new ArrayList<>();
 
     /**
     * Construct a {@link VertexBuffer}.
     */
 
-    public VertexBuffer() {
-        this.VAO = new VertexArrayObject();
-        this.VBOs = new ArrayList<>();
-    }
+    protected VertexBuffer() {
 
-    /**
-    * ...
-    *
-    * @param Index ...
-    * @param Size ...
-    * @param FLOAT_ARRAY ...
-    *
-    * @return ...
-    */
-
-    public VertexBuffer add(int Index, int Size, float[] FLOAT_ARRAY) {
-        return this.add(new VertexBufferAttribute(new VertexBufferObject(), Index, Size), FLOAT_ARRAY);
     }
 
     /**
     * ...
     *
     * @param VBA ...
-    * @param FLOAT_ARRAY ...
+    * @param glBufferArray ...
     *
     * @return ...
     */
 
-    public VertexBuffer add(VertexBufferAttribute VBA, float[] FLOAT_ARRAY) {
+    public VertexBuffer add(VertexBufferAttribute VBA, byte[] glBufferArray) {
         this.VAO.bind();
 
-        VBA.getVBO().bind();
-        VBA.getVBO().addData(FLOAT_ARRAY, GL_DYNAMIC_DRAW);
+        VertexBufferObject VBO = new VertexBufferObject();
+        this.VBOs.add(VBO);
 
-        this.VAO.attr(VBA.getIndex(), VBA.getSize(), 0, 0);
+        VBO.bind();
+        VBO.buffer(glBufferArray, GL_DYNAMIC_DRAW);
 
-        VBA.getVBO().unbind();
+        this.VAO.attribute(VBA.getIndex(), VBA.getSize(), GL_BYTE, false, 0, 0);
+
+        VBO.unbind();
+        VAO.unbind();
+
+        return this;
+    }
+
+    /**
+    * ...
+    *
+    * @param VBA ...
+    * @param glBufferArray ...
+    *
+    * @return ...
+    */
+
+    public VertexBuffer add(VertexBufferAttribute VBA, float[] glBufferArray) {
+        this.VAO.bind();
+
+        VertexBufferObject VBO = new VertexBufferObject();
+        this.VBOs.add(VBO);
+
+        VBO.bind();
+        VBO.buffer(glBufferArray, GL_DYNAMIC_DRAW);
+
+        this.VAO.attribute(VBA.getIndex(), VBA.getSize(), GL_FLOAT, false, 0, 0);
+
+        VBO.unbind();
         VAO.unbind();
 
         return this;
@@ -80,18 +94,18 @@ public class VertexBuffer {
     }
 
     /**
-    * Create a {@link VertexBuffer} from a {@link Vertex}.
+    * ...
     *
-    * @param Vertex {@link Vertex} that will instantiate the {@link VertexBuffer}.
+    * @param Vertex ...
     *
-    * @return a new {@link VertexBuffer}.
+    * @return ...
     */
 
     public static VertexBuffer create(Vertex Vertex) {
         return new VertexBuffer()
-            .add(0, 3, Vertex.getPositions())
-            .add(1, 2, Vertex.getUVs())
-            .add(2, 3, Vertex.getNormals())
-            .add(3, 4, Vertex.getAOs());
+            .add(new VertexBufferAttribute(0, 3), Vertex.getPositions())
+            .add(new VertexBufferAttribute(1, 2), Vertex.getUVs())
+            .add(new VertexBufferAttribute(2, 3), Vertex.getNormals())
+            .add(new VertexBufferAttribute(3, 4), Vertex.getAOs());
     }
 }

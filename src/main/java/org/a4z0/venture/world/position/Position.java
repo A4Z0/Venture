@@ -1,68 +1,67 @@
 package org.a4z0.venture.world.position;
 
-import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 /**
-* ...
+* Represents a Position.
 */
 
 public class Position {
 
-    public static final double $2PI = 2 * Math.PI;
+    protected static final double $2PI = 2 * Math.PI;
 
-    protected double X, Y, Z;
-
-    protected double Pitch;
-    protected double Yaw;
+    protected float x, y, z;
+    protected float pitch;
+    protected float yaw;
 
     /**
     * Construct a {@link Position}.
     */
 
     public Position() {
-        this(0, 0, 0, 0, 0);
+        this(0, 0, 0, 0, -90);
     }
 
     /**
     * Construct a {@link Position}.
     *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
-    * @param Yaw ...
-    * @param Pitch ...
+    * @param x ...
+    * @param y ...
+    * @param z ...
+    * @param yaw ...
+    * @param pitch ...
     */
 
-    public Position(final double X, final double Y, final double Z, final double Yaw, final double Pitch) {
-        this.X = X;
-        this.Y = Y;
-        this.Z = Z;
-        this.Yaw = Yaw;
-        this.Pitch = Pitch;
+    public Position(final float x, final float y, final float z, final float yaw, final float pitch) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.yaw = yaw;
+        this.pitch = pitch;
     }
 
     /**
-    * @return ...
+    * @return the X-Axis.
     */
 
-    public double getX() {
-        return this.X;
+    public float getX() {
+        return this.x;
     }
 
     /**
-    * @return ...
+    * @return the Y-Axis.
     */
 
-    public double getY() {
-        return this.Y;
+    public float getY() {
+        return this.y;
     }
 
     /**
-    * @return ...
+    * @return the Z-Axis.
     */
 
-    public double getZ() {
-        return this.Z;
+    public float getZ() {
+        return this.z;
     }
 
     /**
@@ -70,7 +69,7 @@ public class Position {
     */
 
     public int getBlockX() {
-        return (int) Math.floor(this.X);
+        return (int) Math.floor(this.x);
     }
 
     /**
@@ -78,7 +77,7 @@ public class Position {
     */
 
     public int getBlockY() {
-        return (int) Math.floor(this.Y);
+        return (int) Math.floor(this.y);
     }
 
     /**
@@ -86,78 +85,78 @@ public class Position {
     */
 
     public int getBlockZ() {
-        return (int) Math.floor(this.Z);
+        return (int) Math.floor(this.z);
     }
 
     /**
     * @return ...
     */
 
-    public double getYaw() {
-        return this.Yaw;
+    public float getYaw() {
+        return this.yaw;
     }
 
     /**
     * @return ...
     */
 
-    public double getPitch() {
-        return this.Pitch;
+    public float getPitch() {
+        return this.pitch;
     }
 
     /**
     * ...
     *
-    * @param Yaw ...
+    * @param yaw ...
     */
 
-    public void setYaw(double Yaw) {
-        this.Yaw = Yaw;
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
     }
 
     /**
     * ...
     *
-    * @param Pitch ...
+    * @param pitch ...
     */
 
-    public void setPitch(double Pitch) {
-        this.Pitch = Math.min(89.9d, Math.max(-89.9d, Pitch));
+    public void setPitch(float pitch) {
+        this.pitch = (float) Math.min(89.9d, Math.max(-89.9d, pitch));
     }
 
     /**
     * @return ...
     */
 
-    public Vector3d getDirection() {
-        double XZ = Math.cos(Math.toRadians(this.getPitch()));
+    public Vector3f getDirection() {
+        float XZ = (float) Math.cos(Math.toRadians(this.getPitch()));
 
-        return new Vector3d(
-            (-XZ * Math.sin(Math.toRadians(this.getYaw()))),
-            (-Math.sin(Math.toRadians(this.getPitch()))),
-            (XZ * Math.cos(Math.toRadians(this.getYaw()))
-        ));
+        return new Vector3f(
+            (float) (-XZ * Math.sin(Math.toRadians(this.getYaw()))),
+            (float) -Math.sin(Math.toRadians(this.getPitch())),
+            (float) (XZ * Math.cos(Math.toRadians(this.getYaw())))
+        );
     }
 
     /**
     * ...
     *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
+    * @param x X-Axis.
+    * @param y Y-Axis.
+    * @param z Z-Axis.
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position setDirection(double X, double Y, double Z) {
-        if(X == 0 && Z == 0) {
-            this.setPitch(Y > 0 ? -90 : 90);
+    public Position setDirection(float x, float y, float z) {
+        if(x == 0 && z == 0) {
+            this.setPitch(y > 0 ? -90 : 90);
 
             return this;
         }
 
-        this.Yaw = (float) Math.toDegrees(((Math.atan2(-X, Z)) + $2PI) % $2PI);
-        this.Pitch = (float) Math.toDegrees(Math.atan(-Y / (Math.sqrt((Math.pow(X, 2)) + (Math.pow(Z, 2))))));
+        this.yaw = (float) Math.toDegrees(((Math.atan2(-x, z)) + $2PI) % $2PI);
+        this.pitch = (float) Math.toDegrees(Math.atan(-y / (Math.sqrt((Math.pow(x, 2)) + (Math.pow(z, 2))))));
 
         return this;
     }
@@ -165,13 +164,13 @@ public class Position {
     /**
     * ...
     *
-    * @param Location ...
+    * @param position ...
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position add(Position Location) {
-        return this.add(Location.getX(), Location.getY(), Location.getZ());
+    public Position add(Position position) {
+        return this.add(position.getX(), position.getY(), position.getZ());
     }
 
     /**
@@ -179,27 +178,27 @@ public class Position {
     *
     * @param Vector ...
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position add(Vector3d Vector) {
+    public Position add(Vector3f Vector) {
         return this.add(Vector.x, Vector.y, Vector.z);
     }
 
     /**
     * ...
     *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
+    * @param x X-Axis.
+    * @param y Y-Axis.
+    * @param z Z-Axis.
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position add(double X, double Y, double Z) {
-        this.X += X;
-        this.Y += Y;
-        this.Z += Z;
+    public Position add(float x, float y, float z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
 
         return this;
     }
@@ -207,56 +206,68 @@ public class Position {
     /**
     * ...
     *
-    * @param Location ...
+    * @param other ...
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position subtract(Position Location) {
-        return this.subtract(Location.getX(), Location.getY(), Location.getZ());
+    public Position subtract(Position other) {
+        return this.subtract(other.getX(), other.getY(), other.getZ());
     }
 
     /**
     * ...
     *
-    * @param Vector ...
+    * @param other ...
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position subtract(Vector3d Vector) {
-        return this.subtract(Vector.x, Vector.y, Vector.z);
+    public Position subtract(Vector3f other) {
+        return this.subtract(other.x, other.y, other.z);
     }
 
     /**
     * ...
     *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
+    * @param x X-Axis.
+    * @param y Y-Axis.
+    * @param z Z-Axis.
     *
-    * @return ...
+    * @return this {@link Position}.
     */
 
-    public Position subtract(double X, double Y, double Z) {
-        this.X -= X;
-        this.Y -= Y;
-        this.Z -= Z;
+    public Position subtract(float x, float y, float z) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
 
         return this;
     }
 
     /**
-    * ...
+    * Calculates the distance between positions.
     *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
+    * @param other Other {@link Position}.
     *
-    * @return ...
+    * @return the distance between positions.
     */
 
-    public double distance(double X, double Y, double Z) {
-        return Math.pow((this.X - X), 2) + Math.pow((this.Y - Y), 2) + Math.pow((this.Z - Z), 2);
+    public float distance(Position other) {
+        return this.distance(other.getX(), other.getY(), other.getZ());
+    }
+
+    /**
+    * Calculates the distance between positions.
+    *
+    * @param x X-Axis.
+    * @param y Y-Axis.
+    * @param z Z-Axis.
+    *
+    * @return the distance between positions.
+    */
+
+    public float distance(float x, float y, float z) {
+        return (float) Math.pow((this.x - x), 2) + (float) Math.pow((this.y - y), 2) + (float) Math.pow((this.z - z), 2);
     }
 }

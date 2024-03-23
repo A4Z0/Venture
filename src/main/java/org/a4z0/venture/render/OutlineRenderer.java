@@ -1,9 +1,10 @@
-package org.a4z0.venture.gl.render.renderer;
+package org.a4z0.venture.render;
 
 import org.a4z0.venture.gl.shader.ShaderProgram;
+import org.a4z0.venture.gl.shader.Shaders;
 import org.a4z0.venture.gl.vertex.Vertex;
 import org.a4z0.venture.gl.vertex.VertexBuffer;
-import org.a4z0.venture.world.position.BlockPosition;
+import org.a4z0.venture.world.position.block.BlockPosition;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -47,16 +48,12 @@ public class OutlineRenderer {
 
     public static final Matrix4f TRANSFORMATION = new Matrix4f().translate(0, 0, 0);
 
-    protected final ShaderProgram SHADER_PROGRAM;
-
     /**
     * Construct a {@link OutlineRenderer}.
-    *
-    * @param SHADER_PROGRAM ...
     */
 
-    public OutlineRenderer(ShaderProgram SHADER_PROGRAM) {
-        this.SHADER_PROGRAM = SHADER_PROGRAM;
+    public OutlineRenderer() {
+
     }
 
     /**
@@ -155,13 +152,13 @@ public class OutlineRenderer {
     */
 
     protected void render(VertexBuffer VertexBuffer, int Length, float r, float g, float b, float alpha, float lineWidth) {
-        this.SHADER_PROGRAM.bind();
+        Shaders.OUTLINE_SHADER_PROGRAM.bind();
 
         glBindVertexArray(VertexBuffer.getVAO().getID());
         glEnableVertexAttribArray(0);
 
-        this.SHADER_PROGRAM.setUniform("outline_color", r, g, b, alpha);
-        this.SHADER_PROGRAM.setUniform("transformation", TRANSFORMATION);
+        Shaders.OUTLINE_SHADER_PROGRAM.setUniform("outline_color", r, g, b, alpha);
+        Shaders.OUTLINE_SHADER_PROGRAM.setUniform("transformation", TRANSFORMATION);
 
         glLineWidth(lineWidth);
         glDrawArrays(GL_LINES, 0, Length);
@@ -169,6 +166,8 @@ public class OutlineRenderer {
 
         glLineWidth(1f);
         VertexBuffer.getVAO().unbind();
-        this.SHADER_PROGRAM.unbind();
+        Shaders.OUTLINE_SHADER_PROGRAM.unbind();
+        
+        VertexBuffer.delete();
     }
 }

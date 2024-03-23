@@ -1,5 +1,0 @@
-{
-  "name": "bedrock",
-  "texture": "bedrock.png",
-  "geometry": "block/cube.obj"
-}

@@ -1,5 +1,7 @@
 package org.a4z0.venture.box;
 
+import org.a4z0.venture.world.position.block.BlockPosition;
+import org.a4z0.venture.world.position.Position;
 import org.joml.Math;
 
 /**
@@ -8,42 +10,46 @@ import org.joml.Math;
 
 public class AABB {
 
-    protected final float X1, Y1, Z1;
-    protected final float X2, Y2, Z2;
+    protected final float x1, y1, z1;
+    protected final float x2, y2, z2;
 
     /**
     * Construct a {@link AABB}.
     *
-    * @param X1 ...
-    * @param Y1 ...
-    * @param Z1 ...
-    * @param X2 ...
-    * @param Y2 ...
-    * @param Z2 ...
+    * @param x1 ...
+    * @param y1 ...
+    * @param z1 ...
+    * @param x2 ...
+    * @param y2 ...
+    * @param z2 ...
     */
 
     public AABB(
-        float X1, float Y1, float Z1,
-        float X2, float Y2, float Z2
+        float x1, float y1, float z1,
+        float x2, float y2, float z2
     ) {
-        this.X1 = Math.min(X1, (X2 < 1 ? X2 - 1 : X2 + 1));
-        this.Y1 = Math.min(Y1, (Y2 < 1 ? Y2 - 1 : Y2 + 1));
-        this.Z1 = Math.min(Z1, (Z2 < 1 ? Z2 - 1 : Z2 + 1));
-        this.X2 = Math.max(X1, (X2 < 1 ? X2 - 1 : X2 + 1));
-        this.Y2 = Math.max(Y1, (Y2 < 1 ? Y2 - 1 : Y2 + 1));
-        this.Z2 = Math.max(Z1, (Z2 < 1 ? Z2 - 1 : Z2 + 1));
-    }
-
-    public float getLowerX() {
-        return this.X1;
+        this.x1 = Math.min(x1, x2);
+        this.y1 = Math.min(y1, y2);
+        this.z1 = Math.min(z1, z2);
+        this.x2 = Math.max(x1, x2);
+        this.y2 = Math.max(y1, y2);
+        this.z2 = Math.max(z1, z2);
     }
 
     /**
-     * @return ...
-     */
+    * @return ...
+    */
+
+    public float getLowerX() {
+        return this.x1;
+    }
+
+    /**
+    * @return ...
+    */
 
     public float getLowerY() {
-        return this.Y1;
+        return this.y1;
     }
 
     /**
@@ -51,7 +57,7 @@ public class AABB {
     */
 
     public float getLowerZ() {
-        return this.Z1;
+        return this.z1;
     }
 
     /**
@@ -59,7 +65,7 @@ public class AABB {
     */
 
     public float getUpperX() {
-        return this.X2;
+        return this.x2;
     }
 
     /**
@@ -67,7 +73,7 @@ public class AABB {
     */
 
     public float getUpperY() {
-        return this.Y2;
+        return this.y2;
     }
 
     /**
@@ -75,6 +81,56 @@ public class AABB {
     */
 
     public float getUpperZ() {
-        return this.Z2;
+        return this.z2;
+    }
+
+    /**
+    * ....
+    *
+    * @param position ...
+    *
+    * @return ...
+    */
+
+    public boolean intersects(Position position) {
+        return this.intersects(position.getX(), position.getY(), position.getZ());
+    }
+
+    /**
+    * ...
+    *
+    * @param blockPosition ...
+    *
+    * @return ...
+    */
+
+    public boolean intersects(BlockPosition blockPosition) {
+        return this.intersects(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+    }
+
+    /**
+    * ...
+    *
+    * @param other ...
+    *
+    * @return ...
+    */
+
+    public boolean intersects(AABB other) {
+        return this.x1 <= other.x2 && this.x2 >= other.x1 && this.y1 <= other.y2 && this.y2 >= other.y1 && this.z1 <= other.z2 && this.z2 >= other.z1;
+    }
+
+    /**
+    * ...
+    *
+    * @param x ...
+    * @param y ...
+    * @param z ...
+    *
+    * @return ...
+    */
+
+    public boolean intersects(float x, float y, float z) {
+        return x >= this.x1 && x <= this.x2 && y >= this.y1 && y <= this.y2 && z >= this.z1 && z <= this.z2;
     }
 }

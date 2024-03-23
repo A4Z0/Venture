@@ -1,7 +1,8 @@
-package org.a4z0.venture.gl.render.renderer;
+package org.a4z0.venture.render;
 
 import org.a4z0.venture.Venture;
 import org.a4z0.venture.gl.shader.ShaderProgram;
+import org.a4z0.venture.gl.shader.Shaders;
 import org.a4z0.venture.gl.vertex.Vertex;
 import org.a4z0.venture.gl.vertex.VertexBuffer;
 
@@ -16,29 +17,29 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class CrossRenderer {
 
-    protected final ShaderProgram SHADER_PROGRAM;
-
     /**
     * Construct a {@link CrossRenderer}.
-    *
-    * @param SHADER_PROGRAM ...
     */
 
-    public CrossRenderer(ShaderProgram SHADER_PROGRAM) {
-        this.SHADER_PROGRAM = SHADER_PROGRAM;
+    public CrossRenderer() {
+
     }
 
-    public void renderAim() {
+    /**
+    * ...
+    */
+
+    public void render() {
         float screenWidth = Venture.WINDOW.getWidth();
         float screenHeight = Venture.WINDOW.getHeight();
 
         float lineSize = 4f;
 
         float[] adjustedVertices = new float[]{
-            -((lineSize / screenWidth) * lineSize),  0.0f, 0.0f, // Esquerda
-            ((lineSize / screenWidth) * lineSize),  0.0f, 0.0f, // Direita
-            0.0f,  ((lineSize / screenHeight) * lineSize), 0.0f, // Cima
-            0.0f, -((lineSize / screenHeight) * lineSize), 0.0f // Baixo
+            -((lineSize / screenWidth) * lineSize),  0.0f, 0.0f, // Left
+            ((lineSize / screenWidth) * lineSize),  0.0f, 0.0f, // Right
+            0.0f,  ((lineSize / screenHeight) * lineSize), 0.0f, // Top
+            0.0f, -((lineSize / screenHeight) * lineSize), 0.0f // Bottom
         };
 
         Vertex Vertex = new Vertex().vertex(adjustedVertices);
@@ -47,7 +48,7 @@ public class CrossRenderer {
 
         glDisable(GL_DEPTH_TEST);
 
-        this.SHADER_PROGRAM.bind();
+        Shaders.CROSS_SHADER_PROGRAM.bind();
 
         glBindVertexArray(VB.getVAO().getID());
         glEnableVertexAttribArray(0);
@@ -58,7 +59,7 @@ public class CrossRenderer {
 
         glLineWidth(1f);
         VB.getVAO().unbind();
-        this.SHADER_PROGRAM.unbind();
+        Shaders.CROSS_SHADER_PROGRAM.unbind();
 
         glEnable(GL_DEPTH_TEST);
     }

@@ -1,7 +1,7 @@
-package org.a4z0.venture.gl.render.renderer;
+package org.a4z0.venture.render;
 
+import org.a4z0.venture.gl.shader.Shaders;
 import org.a4z0.venture.gl.vertex.Vertex;
-import org.a4z0.venture.gl.shader.ShaderProgram;
 import org.a4z0.venture.gl.image.texture.Textures;
 import org.a4z0.venture.gl.vertex.VertexBuffer;
 import org.joml.Matrix4f;
@@ -15,18 +15,14 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 * ...
 */
 
-public class VertexRenderer {
-
-    protected final ShaderProgram SHADER_PROGRAM;
+public class BlockRenderer {
 
     /**
-    * Construct a {@link VertexRenderer}.
-    *
-    * @param SHADER_PROGRAM ...
+    * Construct a {@link BlockRenderer}.
     */
 
-    public VertexRenderer(ShaderProgram SHADER_PROGRAM) {
-        this.SHADER_PROGRAM = SHADER_PROGRAM;
+    public BlockRenderer() {
+
     }
 
     /**
@@ -68,7 +64,7 @@ public class VertexRenderer {
     */
 
     public void render(int X, int Y, int Z, VertexBuffer VertexBuffer, int Mode, int Length) {
-        this.SHADER_PROGRAM.bind();
+        Shaders.BLOCK_SHADER_PROGRAM.bind();
 
         glBindVertexArray(VertexBuffer.getVAO().getID());
 
@@ -79,8 +75,8 @@ public class VertexRenderer {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, Textures.TEXTURE_ARRAY.getID());
-        
-        this.SHADER_PROGRAM.setUniform("transformation", transform(X, Y, Z));
+
+        Shaders.BLOCK_SHADER_PROGRAM.setUniform("transformation", transform(X, Y, Z));
 
         glDrawArrays(Mode, 0, Length);
 
@@ -91,7 +87,9 @@ public class VertexRenderer {
         glBindVertexArray(0);
 
         VertexBuffer.getVAO().unbind();
-        this.SHADER_PROGRAM.unbind();
+        Shaders.BLOCK_SHADER_PROGRAM.unbind();
+
+        VertexBuffer.delete();
     }
 
     /**

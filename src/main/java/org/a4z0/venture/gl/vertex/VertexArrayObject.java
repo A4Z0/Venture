@@ -8,34 +8,34 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class VertexArrayObject {
 
-    protected int VAO_ID;
+    protected int glVAO;
 
     /**
     * Construct a {@link VertexArrayObject}.
     */
 
     public VertexArrayObject() {
-        this.VAO_ID = glGenVertexArrays();
+        this.glVAO = glGenVertexArrays();
     }
 
     /**
-    * @return ...
+    * @return the {@link VertexArrayObject VAO} ID.
     */
 
     public int getID() {
-        return this.VAO_ID;
+        return this.glVAO;
     }
 
     /**
-    * ...
+    * Binds this {@link VertexArrayObject VAO} to the current context.
     */
 
     public void bind() {
-        glBindVertexArray(this.VAO_ID);
+        glBindVertexArray(this.glVAO);
     }
 
     /**
-    * ...
+    * Unbinds this {@link VertexArrayObject VAO} from the current context.
     */
 
     public void unbind() {
@@ -43,22 +43,25 @@ public class VertexArrayObject {
     }
 
     /**
-    * ...
-    *
-    * @param size ...
-    * @param stride ...
-    * @param pointer ...
+    * Deletes this {@link VertexArrayObject VAO}.
     */
 
-    public void attr(int index, int size, int stride, int pointer) {
-        glVertexAttribPointer(index, size, GL_FLOAT, false, stride, pointer);
+    public void delete() {
+        glDeleteVertexArrays(this.glVAO);
     }
 
     /**
     * ...
+    *
+    * @param glIndex ...
+    * @param glSize ...
+    * @param glType ...
+    * @param glNormalized ...
+    * @param glStride ...
+    * @param glPointer ...
     */
 
-    public void delete() {
-        glDeleteVertexArrays(this.VAO_ID);
+    public void attribute(int glIndex, int glSize, int glType, boolean glNormalized, int glStride, int glPointer) {
+        glVertexAttribPointer(glIndex, glSize, glType, glNormalized, glStride, glPointer);
     }
 }

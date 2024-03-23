@@ -6,49 +6,34 @@ package org.a4z0.venture.gl.vertex;
 
 public class VertexBufferAttribute {
 
-    protected final VertexBufferObject A;
-    protected final int B;
-    protected final int C;
+    protected final int Index;
+    protected final int Size;
 
     /**
     * Construct a {@link VertexBufferAttribute}.
     *
-    * @param VAO ...
-    * @param ATTRIBUTE_INDEX ...
-    * @param ATTRIBUTE_LENGTH ...
+    * @param Index Index that the {@link VertexBufferObject VBO} will be set.
+    * @param Size ...
     */
 
-    public VertexBufferAttribute(
-        VertexBufferObject VAO,
-        int ATTRIBUTE_INDEX,
-        int ATTRIBUTE_LENGTH
-    ) {
-        this.A = VAO;
-        this.B = ATTRIBUTE_INDEX;
-        this.C = ATTRIBUTE_LENGTH;
+    public VertexBufferAttribute(int Index, int Size) {
+        this.Index = Index;
+        this.Size = Size;
     }
 
     /**
-    * @return ...
-    */
-
-    public VertexBufferObject getVBO() {
-        return this.A;
-    }
-
-    /**
-    * @return ...
+    * @return the Index.
     */
 
     public int getIndex() {
-        return this.B;
+        return this.Index;
     }
 
     /**
-    * @return ...
+    * @return the Size.
     */
 
     public int getSize() {
-        return this.C;
+        return this.Size;
     }
 }

@@ -1,22 +1,25 @@
 package org.a4z0.venture;
 
+import org.a4z0.venture.render.CrossRenderer;
+import org.a4z0.venture.render.OutlineRenderer;
+import org.a4z0.venture.render.BlockRenderer;
+import org.a4z0.venture.world.SimpleBlockMap;
+import org.a4z0.venture.world.SimpleBlockMesh;
+import org.a4z0.venture.world.block.blocks.Air;
+import org.a4z0.venture.world.block.blocks.Bedrock;
+import org.a4z0.venture.world.block.blocks.Dirt;
 import org.a4z0.venture.camera.Camera;
 import org.a4z0.venture.camera.FreeCamera;
 import org.a4z0.venture.camera.ObjectCameraController;
-import org.a4z0.venture.gl.render.renderer.OutlineRenderer;
-import org.a4z0.venture.util.Utils;
-import org.a4z0.venture.world.Overworld;
-import org.a4z0.venture.world.World;
-import org.a4z0.venture.gl.render.renderer.CrossRenderer;
-import org.a4z0.venture.gl.input.Input;
-import org.a4z0.venture.gl.render.renderer.VertexRenderer;
-import org.a4z0.venture.gl.shader.Shaders;
 import org.a4z0.venture.gl.image.texture.Textures;
+import org.a4z0.venture.gl.input.Input;
+import org.a4z0.venture.gl.shader.Shaders;
+import org.a4z0.venture.gl.vertex.Vertex;
 import org.a4z0.venture.gl.window.Window;
-import org.a4z0.venture.world.material.Material;
-import org.a4z0.venture.world.chunk.Mesh;
-import org.a4z0.venture.world.position.BlockPosition;
-import org.joml.Matrix4d;
+import org.a4z0.venture.world.position.Position;
+import org.a4z0.venture.world.position.block.BlockPosition;
+import org.a4z0.venture.world.tile.Tiles;
+import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -30,10 +33,8 @@ public final class Venture {
     public static ObjectCameraController CAMERA_CONTROLLER;
 
     public static CrossRenderer CROSS_RENDERER;
-    public static VertexRenderer VERTEX_RENDERER;
+    public static BlockRenderer BLOCK_RENDERER;
     public static OutlineRenderer OUTLINE_RENDERER;
-
-    public static World WORLD;
 
     /**
     * ...
@@ -49,39 +50,41 @@ public final class Venture {
 
         // Window
         WINDOW = new Window();
-        WINDOW.setVsync(false);
 
         glfwWindowHint(GLFW_SAMPLES, 16);
 
         // Input
         glfwSetInputMode(WINDOW.getID(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwSetCursorPosCallback(WINDOW.getID(), (window, x, y) -> {
-            CAMERA_CONTROLLER.onMouse(x, y);
+            CAMERA_CONTROLLER.onMouse((float) x, (float) y);
         });
 
         // Loaders
         Textures.init();
         Shaders.init();
+        Tiles.init();
 
         // Renderers
-        CROSS_RENDERER = new CrossRenderer(Shaders.CROSS_SHADER_PROGRAM);
-        VERTEX_RENDERER = new VertexRenderer(Shaders.BLOCK_SHADER_PROGRAM);
-        OUTLINE_RENDERER = new OutlineRenderer(Shaders.OUTLINE_SHADER_PROGRAM);
+        CROSS_RENDERER = new CrossRenderer();
+        BLOCK_RENDERER = new BlockRenderer();
+        OUTLINE_RENDERER = new OutlineRenderer();
 
         // Camera
         CAMERA = new FreeCamera();
         CAMERA_CONTROLLER = new ObjectCameraController(CAMERA);
 
-        // Tile Map
-        WORLD = new Overworld();
+        // Map
+        SimpleBlockMap Map = new SimpleBlockMap();
 
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++) {
-                for (int z = 0; z < 8; z++) {
-                    WORLD.setBlock(x, y, z, Material.DIRT);
+        for(int X = 0; X < 16; X++) {
+            for(int Y = 0; Y < 64; Y++) {
+                for(int Z = 0; Z < 16; Z++) {
+                    Map.setVoxel(X, Y, Z, new Dirt());
                 }
             }
         }
+
+        Vertex Stream = SimpleBlockMesh.mesh(Map);
 
         // Default
         glEnable(GL_BLEND);
@@ -103,45 +106,53 @@ public final class Venture {
             }
 
             if(Input.isKeyPressed(GLFW_KEY_ESCAPE)) {
-                WINDOW.delete();
-
+                glfwTerminate();
                 System.exit(0);
             }
 
-            Matrix4d view = CAMERA.getView();
-            Matrix4d projection = CAMERA.getProjection();
-            BlockPosition blockPosition = Utils.getDirAt(CAMERA.getPosition(), 5);
-
-            if(Input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-                if(blockPosition != null)
-                    WORLD.setBlock(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), Material.AIR);
-            }
+            Matrix4f View = CAMERA.getView();
+            Matrix4f Projection = CAMERA.getProjection();
 
             Shaders.BLOCK_SHADER_PROGRAM.bind();
-            Shaders.BLOCK_SHADER_PROGRAM.setUniform("camera_projection", projection);
-            Shaders.BLOCK_SHADER_PROGRAM.setUniform("camera_view", view);
+            Shaders.BLOCK_SHADER_PROGRAM.setUniform("camera_projection", Projection);
+            Shaders.BLOCK_SHADER_PROGRAM.setUniform("camera_view", View);
             Shaders.BLOCK_SHADER_PROGRAM.unbind();
 
             Shaders.OUTLINE_SHADER_PROGRAM.bind();
-            Shaders.OUTLINE_SHADER_PROGRAM.setUniform("camera_projection", projection);
-            Shaders.OUTLINE_SHADER_PROGRAM.setUniform("camera_view", view);
+            Shaders.OUTLINE_SHADER_PROGRAM.setUniform("camera_projection", Projection);
+            Shaders.OUTLINE_SHADER_PROGRAM.setUniform("camera_view", View);
             Shaders.OUTLINE_SHADER_PROGRAM.unbind();
 
-            VERTEX_RENDERER.render(0, 0, 0, Mesh.create(WORLD.getChunkAt(0, 0)));
+            BlockPosition[] After = Map.getVoxel(CAMERA.getPosition(), 5);
 
-            if(blockPosition != null)
-                OUTLINE_RENDERER.render(blockPosition, 0, 0, 0, 1f, 1f);
+            if(After != null) {
+                if(Input.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+                    Map.setVoxel(After[0].getX(), After[0].getY(), After[0].getZ(), new Air());
+                }
 
-            CROSS_RENDERER.renderAim();
+                if(Input.isButtonPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
+                    Map.setVoxel(After[1].getX(), After[1].getY(), After[1].getZ(), new Bedrock());
+                }
+            }
+
+            if(Map.hasUpdated) {
+                Map.hasUpdated = false;
+                Stream = SimpleBlockMesh.mesh(Map);
+            }
+
+            BLOCK_RENDERER.render(0, 0, 0, Stream);
+
+            BlockPosition[] Before = Map.getVoxel(CAMERA.getPosition(), 5);
+
+            if(Before != null)
+                OUTLINE_RENDERER.render(Before[0], 0f, 0f, 0f, 1f, 1f);
+
+            CROSS_RENDERER.render();
 
             WINDOW.update();
         }
 
-        // Exit
-        WINDOW.delete();
-
-        Shaders.BLOCK_SHADER_PROGRAM.delete();
-        Shaders.OUTLINE_SHADER_PROGRAM.delete();
-        Shaders.CROSS_SHADER_PROGRAM.delete();
+        glfwTerminate();
+        System.exit(0);
     }
 }

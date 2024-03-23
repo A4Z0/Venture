@@ -3,7 +3,7 @@ package org.a4z0.venture.camera;
 import org.a4z0.venture.Venture;
 import org.a4z0.venture.world.position.Position;
 import org.joml.Math;
-import org.joml.Matrix4d;
+import org.joml.Matrix4f;
 
 /**
 * ...
@@ -18,7 +18,7 @@ public class FreeCamera implements Camera {
     */
 
     public FreeCamera() {
-        this(0, 0, 0, DEFAULT_YAW, DEFAULT_PITCH);
+        this(0f, 0f, 0f, DEFAULT_YAW, DEFAULT_PITCH);
     }
 
     /**
@@ -31,7 +31,7 @@ public class FreeCamera implements Camera {
     * @param pitch ...
     */
 
-    public FreeCamera(final double x, final double y, final double z, final double yaw, final double pitch) {
+    public FreeCamera(float x, float y, float z, float yaw, float pitch) {
         this(new Position(x, y, z, yaw, pitch));
     }
 
@@ -46,8 +46,13 @@ public class FreeCamera implements Camera {
     }
 
     @Override
-    public Matrix4d getProjection() {
-        return new Matrix4d().identity().perspective(
+    public Position getPosition() {
+        return this.position;
+    }
+
+    @Override
+    public Matrix4f getProjection() {
+        return new Matrix4f().identity().perspective(
             Math.toRadians(DEFAULT_FOV),
             ((float) Venture.WINDOW.getWidth() / (float) Venture.WINDOW.getHeight()),
             DEFAULT_NEAR_PLANE,
@@ -56,18 +61,13 @@ public class FreeCamera implements Camera {
     }
 
     @Override
-    public Matrix4d getView() {
-        return new Matrix4d().identity().lookAt(
+    public Matrix4f getView() {
+        return new Matrix4f().identity().lookAt(
             this.position.getX(), this.position.getY(), this.position.getZ(),
             (this.position.getX() + this.position.getDirection().x),
             (this.position.getY() + this.position.getDirection().y),
             (this.position.getZ() + this.position.getDirection().z),
         0, 1, 0
         );
-    }
-
-    @Override
-    public Position getPosition() {
-        return this.position;
     }
 }

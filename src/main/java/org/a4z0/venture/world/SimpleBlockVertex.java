@@ -1,14 +1,17 @@
-package org.a4z0.venture.util;
+package org.a4z0.venture.world;
 
+import jdk.jfr.Experimental;
 import org.a4z0.venture.gl.image.atlas.Address;
 import org.a4z0.venture.gl.vertex.Vertex;
+import org.a4z0.venture.world.tile.Tile;
 import org.a4z0.venture.world.position.Direction;
 
 /**
 * ...
 */
 
-public class BlockVertex {
+@Experimental
+public class SimpleBlockVertex {
 
     public static float[] UV = {
         0f, 0f,
@@ -100,7 +103,7 @@ public class BlockVertex {
     * @param Direction ...
     */
 
-    public static void stream(Vertex Vertex, Direction Direction, int X, int Y, int Z, Address Address) {
+    public static void stream(Vertex Vertex, Direction Direction, Tile Tile, int X, int Y, int Z) {
         switch (Direction) {
             case NORTH: {
                 NORTH.offset(0, 0, new float[]{
@@ -112,7 +115,7 @@ public class BlockVertex {
                     X, Y, Z
                 });
 
-                Vertex.vertex(NORTH.getPositions(), getUV(Address), NORTH.getNormals(), NORTH.getAOs());
+                Vertex.vertex(NORTH.getPositions(), getUV(Tile.getNorth()), NORTH.getNormals(), NORTH.getAOs());
 
                 break;
             }
@@ -126,7 +129,7 @@ public class BlockVertex {
                     X, Y, Z
                 });
 
-                Vertex.vertex(SOUTH.getPositions(), getUV(Address), SOUTH.getNormals(), SOUTH.getAOs());
+                Vertex.vertex(SOUTH.getPositions(), getUV(Tile.getSouth()), SOUTH.getNormals(), SOUTH.getAOs());
 
                 break;
             }
@@ -140,7 +143,7 @@ public class BlockVertex {
                     X, Y, Z
                 });
 
-                Vertex.vertex(EAST.getPositions(), getUV(Address), EAST.getNormals(), EAST.getAOs());
+                Vertex.vertex(EAST.getPositions(), getUV(Tile.getEast()), EAST.getNormals(), EAST.getAOs());
 
                 break;
             }
@@ -154,7 +157,7 @@ public class BlockVertex {
                     X, Y, Z
                 });
 
-                Vertex.vertex(WEST.getPositions(), getUV(Address), WEST.getNormals(), WEST.getAOs());
+                Vertex.vertex(WEST.getPositions(), getUV(Tile.getWest()), WEST.getNormals(), WEST.getAOs());
 
                 break;
             }
@@ -168,7 +171,7 @@ public class BlockVertex {
                     X, Y, Z
                 });
 
-                Vertex.vertex(TOP.getPositions(), getUV(Address), TOP.getNormals(), TOP.getAOs());
+                Vertex.vertex(TOP.getPositions(), getUV(Tile.getTop()), TOP.getNormals(), TOP.getAOs());
 
                 break;
             }
@@ -182,7 +185,7 @@ public class BlockVertex {
                     X, Y, Z
                 });
 
-                Vertex.vertex(BOTTOM.getPositions(), getUV(Address), BOTTOM.getNormals(), BOTTOM.getAOs());
+                Vertex.vertex(BOTTOM.getPositions(), getUV(Tile.getBottom()), BOTTOM.getNormals(), BOTTOM.getAOs());
 
                 break;
             }

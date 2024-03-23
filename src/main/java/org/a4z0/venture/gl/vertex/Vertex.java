@@ -1,5 +1,7 @@
 package org.a4z0.venture.gl.vertex;
 
+import jdk.jfr.Experimental;
+
 import java.util.*;
 
 /**
@@ -18,6 +20,7 @@ import java.util.*;
 * </ul>
 */
 
+@Experimental
 public class Vertex {
 
     protected final List<List<Float>> parts;

@@ -2,8 +2,8 @@ package org.a4z0.venture.gl.vertex;
 
 import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -13,34 +13,34 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class VertexBufferObject {
 
-    protected final int VBO_ID;
+    protected final int glVBO;
 
     /**
     * Construct a {@link VertexBufferObject}.
     */
 
     public VertexBufferObject() {
-        this.VBO_ID = glGenBuffers();
+        this.glVBO = glGenBuffers();
     }
 
     /**
-    * @return ...
+    * @return the {@link VertexBufferObject VBO} ID.
     */
 
     public int getID() {
-        return this.VBO_ID;
+        return this.glVBO;
     }
 
     /**
-    * ...
+    * Binds this {@link VertexBufferObject VBO} to the current context.
     */
 
     public void bind() {
-        glBindBuffer(GL_ARRAY_BUFFER, this.VBO_ID);
+        glBindBuffer(GL_ARRAY_BUFFER, this.glVBO);
     }
 
     /**
-    * ...
+    * Unbinds this {@link VertexBufferObject VBO} from the current context.
     */
 
     public void unbind() {
@@ -48,62 +48,62 @@ public class VertexBufferObject {
     }
 
     /**
-    * ...
-    *
-    * @param data ...
-    * @param usage ...
-    */
-
-    public void addData(float[] data, int usage) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
-        buffer.put(data);
-        buffer.flip();
-
-        this.addData(buffer, usage);
-    }
-
-    /**
-    * ...
-    *
-    * @param buffer ...
-    * @param usage ...
-    */
-
-    public void addData(FloatBuffer buffer, int usage) {
-        glBufferData(GL_ARRAY_BUFFER, buffer, usage);
-    }
-
-    /**
-    * ...
-    *
-    * @param data ...
-    * @param usage ...
-    */
-
-    public void addData(int target, int[] data, int usage) {
-        IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
-        buffer.put(data);
-        buffer.flip();
-
-        this.addData(target, buffer, usage);
-    }
-
-    /**
-    * ...
-    *
-    * @param buffer ...
-    * @param usage ...
-    */
-
-    public void addData(int target, IntBuffer buffer, int usage) {
-        glBufferData(target, buffer, usage);
-    }
-
-    /**
-    * ...
+    * Deletes this {@link VertexBufferObject VBO}.
     */
 
     public void delete() {
-        glDeleteVertexArrays(this.VBO_ID);
+        glDeleteBuffers(this.glVBO);
+    }
+
+    /**
+    * ...
+    *
+    * @param glBuffer ...
+    * @param glUsage ...
+    */
+
+    public void buffer(ByteBuffer glBuffer, int glUsage) {
+        glBufferData(GL_ARRAY_BUFFER, glBuffer, glUsage);
+    }
+
+    /**
+    * ...
+    *
+    * @param glBufferArray ...
+    * @param glUsage ...
+    */
+
+    public void buffer(byte[] glBufferArray, int glUsage) {
+        ByteBuffer glBuffer = BufferUtils.createByteBuffer(glBufferArray.length);
+        glBuffer.put(glBufferArray);
+        glBuffer.flip();
+
+        this.buffer(glBuffer, glUsage);
+    }
+
+    /**
+    * ...
+    *
+    * @param glBuffer ...
+    * @param glUsage ...
+    */
+
+    public void buffer(FloatBuffer glBuffer, int glUsage) {
+        glBufferData(GL_ARRAY_BUFFER, glBuffer, glUsage);
+    }
+
+    /**
+    * ...
+    *
+    * @param glBufferArray ...
+    * @param glUsage ...
+    */
+
+    public void buffer(float[] glBufferArray, int glUsage) {
+        FloatBuffer glBuffer = BufferUtils.createFloatBuffer(glBufferArray.length);
+        glBuffer.put(glBufferArray);
+        glBuffer.flip();
+
+        this.buffer(glBuffer, glUsage);
     }
 }

@@ -14,6 +14,9 @@ public final class Shaders {
     private static final String BLOCK_VERTEX_SHADER_SOURCE = getSource("assets/render/world/block.vert");
     private static final String BLOCK_FRAGMENT_SHADER_SOURCE = getSource("assets/render/world/block.frag");
 
+    private static final String VOXEL_VERTEX_SHADER_SOURCE = getSource("assets/render/world/voxel.vert");
+    private static final String VOXEL_FRAGMENT_SHADER_SOURCE = getSource("assets/render/world/voxel.frag");
+
     private static final String OUTLINE_VERTEX_SHADER_SOURCE = getSource("assets/render/world/outline.vert");
     private static final String OUTLINE_FRAGMENT_SHADER_SOURCE = getSource("assets/render/world/outline.frag");
 
@@ -22,6 +25,9 @@ public final class Shaders {
 
     public static ShaderProgram BLOCK_SHADER_PROGRAM;
     private static Shader BLOCK_VERTEX_SHADER, BLOCK_FRAGMENT_SHADER;
+
+    public static ShaderProgram VOXEL_SHADER_PROGRAM;
+    private static Shader VOXEL_VERTEX_SHADER, VOXEL_FRAGMENT_SHADER;
 
     public static ShaderProgram OUTLINE_SHADER_PROGRAM;
     private static Shader OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER;
@@ -53,6 +59,24 @@ public final class Shaders {
             BLOCK_SHADER_PROGRAM.addShader(BLOCK_FRAGMENT_SHADER);
 
             BLOCK_SHADER_PROGRAM.link();
+        }
+        {
+            VOXEL_SHADER_PROGRAM = new ShaderProgram();
+            VOXEL_SHADER_PROGRAM.attribute(0, "vertex_position");
+            VOXEL_SHADER_PROGRAM.attribute(1, "vertex_color");
+
+            VOXEL_VERTEX_SHADER = new Shader(ShaderType.VERTEX);
+            VOXEL_VERTEX_SHADER.source(VOXEL_VERTEX_SHADER_SOURCE);
+            VOXEL_VERTEX_SHADER.compile();
+
+            VOXEL_FRAGMENT_SHADER = new Shader(ShaderType.FRAGMENT);
+            VOXEL_FRAGMENT_SHADER.source(VOXEL_FRAGMENT_SHADER_SOURCE);
+            VOXEL_FRAGMENT_SHADER.compile();
+
+            VOXEL_SHADER_PROGRAM.addShader(VOXEL_VERTEX_SHADER);
+            VOXEL_SHADER_PROGRAM.addShader(VOXEL_FRAGMENT_SHADER);
+
+            VOXEL_SHADER_PROGRAM.link();
         }
         {
             OUTLINE_SHADER_PROGRAM = new ShaderProgram();
