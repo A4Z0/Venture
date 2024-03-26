@@ -16,6 +16,7 @@ public class LoadedChunk implements Chunk {
     protected final int X;
     protected final int Z;
 
+    // TODO: Use 1D Array
     protected final byte[][][] Blocks = new byte[CHUNK_BLOCK_ARRAY_X][CHUNK_BLOCK_ARRAY_Y][CHUNK_BLOCK_ARRAY_Z];
 
     /**

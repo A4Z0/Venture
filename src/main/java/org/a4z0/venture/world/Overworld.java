@@ -44,6 +44,8 @@ public class Overworld implements World {
         return this.Chunks;
     }
 
+    // FIXME: Something here is wrong
+
     @Override
     public Chunk getChunkAt(int x, int z) {
         int BX = (x >> CHUNK_X_SQRT) + CHUNK_MAX_X;

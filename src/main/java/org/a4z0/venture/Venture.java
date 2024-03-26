@@ -6,7 +6,6 @@ import org.a4z0.venture.gl.vertex.VertexBuffer;
 import org.a4z0.venture.position.Position;
 import org.a4z0.venture.position.block.BlockPosition;
 import org.a4z0.venture.render.CrossRenderer;
-import org.a4z0.venture.render.FontRenderer;
 import org.a4z0.venture.render.OutlineRenderer;
 import org.a4z0.venture.render.BlockRenderer;
 import org.a4z0.venture.camera.Camera;
@@ -44,7 +43,6 @@ public final class Venture {
     public static CrossRenderer CROSS_RENDERER;
     public static BlockRenderer BLOCK_RENDERER;
     public static OutlineRenderer OUTLINE_RENDERER;
-    public static FontRenderer FONT_RENDERER;
 
     public static World WORLD;
 
@@ -78,7 +76,6 @@ public final class Venture {
         CROSS_RENDERER = new CrossRenderer();
         BLOCK_RENDERER = new BlockRenderer();
         OUTLINE_RENDERER = new OutlineRenderer();
-        FONT_RENDERER = new FontRenderer();
 
         // Camera
         CAMERA = new FreeCamera();
