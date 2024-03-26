@@ -1,6 +1,6 @@
 package org.a4z0.venture.camera;
 
-import org.a4z0.venture.world.position.Position;
+import org.a4z0.venture.position.Position;
 import org.joml.Matrix4f;
 
 /**
@@ -9,10 +9,10 @@ import org.joml.Matrix4f;
 
 public interface Camera {
 
-    float DEFAULT_FAR_PLANE = 1000f;
-    float DEFAULT_NEAR_PLANE = 0.1f;
+    float DEFAULT_FAR_PLANE = 100f;
+    float DEFAULT_NEAR_PLANE = 0.001f;
 
-    float DEFAULT_FOV = 80f;
+    float DEFAULT_FOV = 90f;
 
     float DEFAULT_PITCH = 0f;
     float DEFAULT_YAW = -90f;

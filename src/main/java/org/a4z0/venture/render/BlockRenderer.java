@@ -1,7 +1,6 @@
 package org.a4z0.venture.render;
 
 import org.a4z0.venture.gl.shader.Shaders;
-import org.a4z0.venture.gl.vertex.Vertex;
 import org.a4z0.venture.gl.image.texture.Textures;
 import org.a4z0.venture.gl.vertex.VertexBuffer;
 import org.joml.Matrix4f;
@@ -23,19 +22,6 @@ public class BlockRenderer {
 
     public BlockRenderer() {
 
-    }
-
-    /**
-    * ...
-    *
-    * @param X ...
-    * @param Y ...
-    * @param Z ...
-    * @param Vertex ...
-    */
-
-    public void render(int X, int Y, int Z, Vertex Vertex) {
-        this.render(X, Y, Z, VertexBuffer.create(Vertex), Vertex.getLength());
     }
 
     /**

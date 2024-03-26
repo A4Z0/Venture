@@ -1,4 +1,4 @@
-package org.a4z0.venture.world.position.block;
+package org.a4z0.venture.position.block;
 
 /**
 * Represents the Position of a Block.

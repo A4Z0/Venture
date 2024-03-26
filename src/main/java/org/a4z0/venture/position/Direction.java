@@ -1,4 +1,4 @@
-package org.a4z0.venture.world.position;
+package org.a4z0.venture.position;
 
 /**
 * Represents directions in a three-dimensional space.

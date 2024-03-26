@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
 public class ObjectCameraController {
 
     protected final Camera Camera;
-    protected final org.a4z0.venture.world.position.Position Position;
+    protected final org.a4z0.venture.position.Position Position;
 
     private final float SENSITIVITY = 0.05f;
     private final float HORIZONTAL_SPEED = 0.05f;

@@ -4,6 +4,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -69,16 +70,34 @@ public class VertexBufferObject {
     /**
     * ...
     *
-    * @param glBufferArray ...
+    * @param glBuffer ...
     * @param glUsage ...
     */
 
-    public void buffer(byte[] glBufferArray, int glUsage) {
-        ByteBuffer glBuffer = BufferUtils.createByteBuffer(glBufferArray.length);
-        glBuffer.put(glBufferArray);
-        glBuffer.flip();
+    public void buffer(byte[] glBuffer, int glUsage) {
+        glBufferData(GL_ARRAY_BUFFER, ByteBuffer.wrap(glBuffer), glUsage);
+    }
 
-        this.buffer(glBuffer, glUsage);
+    /**
+    * ...
+    *
+    * @param glBuffer ...
+    * @param glUsage ...
+    */
+
+    public void buffer(ShortBuffer glBuffer, int glUsage) {
+        glBufferData(GL_ARRAY_BUFFER, glBuffer, glUsage);
+    }
+
+    /**
+    * ...
+    *
+    * @param glBuffer ...
+    * @param glUsage ...
+    */
+
+    public void buffer(short[] glBuffer, int glUsage) {
+        glBufferData(GL_ARRAY_BUFFER, glBuffer, glUsage);
     }
 
     /**
@@ -95,15 +114,11 @@ public class VertexBufferObject {
     /**
     * ...
     *
-    * @param glBufferArray ...
+    * @param glBuffer ...
     * @param glUsage ...
     */
 
-    public void buffer(float[] glBufferArray, int glUsage) {
-        FloatBuffer glBuffer = BufferUtils.createFloatBuffer(glBufferArray.length);
-        glBuffer.put(glBufferArray);
-        glBuffer.flip();
-
-        this.buffer(glBuffer, glUsage);
+    public void buffer(float[] glBuffer, int glUsage) {
+        glBufferData(GL_ARRAY_BUFFER, glBuffer, glUsage);
     }
 }

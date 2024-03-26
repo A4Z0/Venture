@@ -1,7 +1,7 @@
 package org.a4z0.venture.box;
 
-import org.a4z0.venture.world.position.block.BlockPosition;
-import org.a4z0.venture.world.position.Position;
+import org.a4z0.venture.position.block.BlockPosition;
+import org.a4z0.venture.position.Position;
 import org.joml.Math;
 
 /**

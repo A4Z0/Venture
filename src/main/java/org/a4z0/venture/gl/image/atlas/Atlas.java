@@ -95,7 +95,7 @@ public class Atlas {
         int offsetHeight = (tileIndex / (this.getLength() / (this.glTexture.getHeight() / this.tileSize))) * this.tileSize;
 
         this.glTexture.bind();
-        this.glTexture.draw(new DrawSubTextureContext2D(offsetWidth, offsetHeight, this.tileSize, this.tileSize, Image.getData(tileInputStream)));
+        this.glTexture.draw(new DrawSubTextureContext2D(offsetWidth, offsetHeight, this.tileSize, this.tileSize, Image.getImageData(tileInputStream)));
         this.glTexture.unbind();
 
         return this.addressMapArray[tileIndex] = new Address(this, this.tileSize, offsetWidth, offsetHeight);

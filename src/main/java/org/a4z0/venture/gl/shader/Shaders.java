@@ -14,6 +14,9 @@ public final class Shaders {
     private static final String BLOCK_VERTEX_SHADER_SOURCE = getSource("assets/render/world/block.vert");
     private static final String BLOCK_FRAGMENT_SHADER_SOURCE = getSource("assets/render/world/block.frag");
 
+    private static final String TEXT_VERTEX_SHADER_SOURCE = getSource("assets/render/ui/text.vert");
+    private static final String TEXT_FRAGMENT_SHADER_SOURCE = getSource("assets/render/ui/text.frag");
+
     private static final String VOXEL_VERTEX_SHADER_SOURCE = getSource("assets/render/world/voxel.vert");
     private static final String VOXEL_FRAGMENT_SHADER_SOURCE = getSource("assets/render/world/voxel.frag");
 
@@ -25,6 +28,9 @@ public final class Shaders {
 
     public static ShaderProgram BLOCK_SHADER_PROGRAM;
     private static Shader BLOCK_VERTEX_SHADER, BLOCK_FRAGMENT_SHADER;
+
+    public static ShaderProgram TEXT_SHADER_PROGRAM;
+    private static Shader TEXT_VERTEX_SHADER, TEXT_FRAGMENT_SHADER;
 
     public static ShaderProgram VOXEL_SHADER_PROGRAM;
     private static Shader VOXEL_VERTEX_SHADER, VOXEL_FRAGMENT_SHADER;
@@ -59,6 +65,25 @@ public final class Shaders {
             BLOCK_SHADER_PROGRAM.addShader(BLOCK_FRAGMENT_SHADER);
 
             BLOCK_SHADER_PROGRAM.link();
+        }
+        {
+            TEXT_SHADER_PROGRAM = new ShaderProgram();
+            TEXT_SHADER_PROGRAM.attribute(0, "vertex_position");
+            TEXT_SHADER_PROGRAM.attribute(1, "vertex_texture_coordinates");
+            TEXT_SHADER_PROGRAM.attribute(2, "text_color");
+
+            TEXT_VERTEX_SHADER = new Shader(ShaderType.VERTEX);
+            TEXT_VERTEX_SHADER.source(TEXT_VERTEX_SHADER_SOURCE);
+            TEXT_VERTEX_SHADER.compile();
+
+            TEXT_FRAGMENT_SHADER = new Shader(ShaderType.FRAGMENT);
+            TEXT_FRAGMENT_SHADER.source(TEXT_FRAGMENT_SHADER_SOURCE);
+            TEXT_FRAGMENT_SHADER.compile();
+
+            TEXT_SHADER_PROGRAM.addShader(TEXT_VERTEX_SHADER);
+            TEXT_SHADER_PROGRAM.addShader(TEXT_FRAGMENT_SHADER);
+
+            TEXT_SHADER_PROGRAM.link();
         }
         {
             VOXEL_SHADER_PROGRAM = new ShaderProgram();

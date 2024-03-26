@@ -1,4 +1,4 @@
-package org.a4z0.venture.world.tile;
+package org.a4z0.venture.tile;
 
 import org.a4z0.venture.gl.image.texture.Textures;
 

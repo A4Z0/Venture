@@ -1,13 +1,23 @@
 package org.a4z0.venture.gl.image;
 
+import org.a4z0.venture.gl.image.texture.Texture;
+import org.a4z0.venture.gl.image.texture.context.DrawTextureContext2D;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.stb.STBTTBakedChar;
+import org.lwjgl.stb.STBTTFontinfo;
+import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 
 /**
 * ...
@@ -39,7 +49,7 @@ public interface Image {
     * @return ...
     */
 
-    static ByteBuffer getData(InputStream TEXTURE_INPUT_STREAM) {
+    static ByteBuffer getImageData(InputStream TEXTURE_INPUT_STREAM) {
         try(MemoryStack MEMORY_STACK = MemoryStack.stackPush()) {
             IntBuffer WIDTH_BUFFER = MEMORY_STACK.mallocInt(1);
             IntBuffer HEIGHT_BUFFER = MEMORY_STACK.mallocInt(1);
@@ -65,5 +75,46 @@ public interface Image {
 
             return IMAGE_DATA;
         }
+    }
+
+    /**
+    * ...
+    *
+    * @param TEXTURE_INPUT_STREAM ...
+    *
+    * @return ...
+    */
+
+    static Texture getGlyphData(InputStream TEXTURE_INPUT_STREAM) {
+        byte[] FILE_DATA;
+
+        try(InputStream INPUT_STREAM = TEXTURE_INPUT_STREAM) {
+            FILE_DATA = INPUT_STREAM.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ByteBuffer FONT_BUFFER = BufferUtils.createByteBuffer(FILE_DATA.length);
+        FONT_BUFFER.put(FILE_DATA);
+        FONT_BUFFER.flip();
+
+        ByteBuffer BITMAP = BufferUtils.createByteBuffer(512 * FILE_DATA.length);
+
+        STBTTBakedChar.Buffer CHAR_DATA = STBTTBakedChar.malloc(96);
+
+        STBTruetype.stbtt_BakeFontBitmap(FONT_BUFFER, 24, BITMAP, 512, 512, 32, CHAR_DATA);
+
+        Texture texture = new Texture(512, 512);
+        texture.bind();
+
+        texture.param(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        texture.param(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        texture.param(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        texture.param(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+        texture.draw(new DrawTextureContext2D(texture.getWidth(), texture.getHeight(), BITMAP));
+        texture.unbind();
+
+        return texture;
     }
 }

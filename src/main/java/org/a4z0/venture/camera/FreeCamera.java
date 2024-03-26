@@ -1,7 +1,7 @@
 package org.a4z0.venture.camera;
 
 import org.a4z0.venture.Venture;
-import org.a4z0.venture.world.position.Position;
+import org.a4z0.venture.position.Position;
 import org.joml.Math;
 import org.joml.Matrix4f;
 

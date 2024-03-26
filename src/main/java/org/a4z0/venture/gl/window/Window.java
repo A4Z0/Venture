@@ -22,7 +22,7 @@ public class Window {
     */
 
     public Window() {
-        this(800, 600, "Hello, World!");
+        this(1366, 720, "Hello, World!");
     }
 
     /**
